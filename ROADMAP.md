@@ -37,6 +37,11 @@ Lo que **no** existe todavía: SEO real (JSON-LD, `robots.txt`, favicon en más 
 
 ## Changelog
 
+### 2026-08-17 (sesión 5) — Fix de orden del nav (scroll-spy)
+- El usuario notó que el menú "se salía mal" al hacer scroll y diagnosticó bien la causa: `Blog` (una página real, sin ancla) estaba metido en el medio de los 3 links de ancla (Portfolio/Servicios/Sobre Mí), así que el resaltado del scroll-spy "saltaba" un item muerto en el medio del recorrido visual.
+- Reordenado `links` en `Header.astro`: Inicio → Portfolio → Servicios → Sobre Mí → Blog → Contacto (las anclas quedan contiguas, las páginas reales al final).
+- Verificado con un script de Playwright que hace scroll a varias posiciones y lee las clases `is-active`: ahora resalta en secuencia limpia (Portfolio → Servicios → Sobre Mí), sin saltos.
+
 ### 2026-08-17 (sesión 4) — Mejoras de conversión/UX pedidas por el usuario
 El usuario revisó el sitio y pidió mi opinión sobre qué mejorar antes de seguir con lo técnico. Propuse 4 puntos, dio el visto bueno para los 4:
 - **CTA en el hero**: agregado botón "Hablemos por WhatsApp" (link real, mismo número que el footer: `wa.me/59898472684`) + botón secundario "Ver mi trabajo" (ancla a `#portfolio`). Nueva clase `.btn--outline` en `global.css`.
