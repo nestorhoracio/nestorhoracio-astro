@@ -2,10 +2,10 @@
 
 ## Estado actual (2026-08-17)
 
-**El sitio ya levanta y las 17 páginas se generan bien** (`npm run build` — verificado con capturas de Playwright en home, un post de blog, una página de portfolio, el hub del blog, contacto, política de privacidad, dark mode y menú mobile; sin errores de consola). Lo que existe:
+**El sitio ya levanta y las 18 páginas se generan bien** (`npm run build` — verificado con capturas de Playwright en home, un post de blog, una página de portfolio, el hub del blog, contacto, política de privacidad, dark mode y menú mobile; sin errores de consola). Lo que existe:
 
 - Scaffold de Astro (`package.json`, `astro.config.mjs`, `tsconfig.json`) — mismo patrón minimalista que jesuseselcamino-astro, sin starter template de por medio.
-- `src/content.config.ts` con dos collections: `blog` (8 posts) y `portfolio` (5 proyectos).
+- `src/content.config.ts` con dos collections: `blog` (8 posts) y `portfolio` (6 proyectos, incluyendo Atalaias Rou — no está en el sitio WP original, se agregó a pedido del usuario con captura de su deploy temporal en Netlify, ver changelog).
 - `scripts/fetch-wp-content.mjs` — extrae los posts del blog desde la REST API y limpia el contenido de Divi (ver CLAUDE.md, sección Gotchas).
 - Diseño portado: `src/styles/global.css` (tokens), `header.css`, `footer.css`, `home.css`, `blog.css`, `contact.css`. Fuente Blinker self-hosted, logos reales en `public/images/logo/`.
 - `Layout.astro`, `Header.astro` (dark mode con swap de logo + scroll-spy + menú mobile, todo funcional) y `Footer.astro`.
@@ -36,6 +36,12 @@ Lo que **no** existe todavía: SEO real (JSON-LD, `robots.txt`, favicon en más 
 7. **Cuando el usuario pida arrancar el deploy**: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo.
 
 ## Changelog
+
+### 2026-08-17 (sesión 3) — Nuevo proyecto de portfolio: Atalaias Rou
+- El usuario pidió agregar un 6to proyecto que no está en el sitio original: **Atalaias Rou** (`f:/proyecto astro abril 2026/atalaias-rou`), sitio de un ministerio evangélico (Atalaias Rou / IMTF Uruguay y Brasil) con portal de 20 radios en vivo + subsitios institucionales UY/BR. Deploy temporal en `https://atalaiasrou.netlify.app/` hasta pasar al dominio definitivo.
+- Descripción y stack sacados del README.md real del proyecto (no inventados). Captura de portada tomada en vivo del deploy de Netlify con Playwright (con autorización explícita del usuario para sacar captura y descripción).
+- Agregado `src/content/portfolio/atalaias-rou.md` (`order: 6`, mismo patrón que los otros 5) — aparece solo en el grid del home, no requirió tocar ningún componente.
+- `npm run build`: 18 páginas. Verificado visualmente: la card nueva encaja bien en el grid (3×2) y la página de detalle se ve consistente con el resto.
 
 ### 2026-08-17 (sesión 2) — Commit inicial + formulario de contacto + Política de Privacidad
 - Primer commit del repo (todo lo de la sesión 1: scaffold, contenido, diseño, home/blog/portfolio).

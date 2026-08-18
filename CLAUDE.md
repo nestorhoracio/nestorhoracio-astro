@@ -38,7 +38,7 @@ Objetivo: velocidad de carga y SEO técnico — y de paso, es el propio caso de 
 
 **Home (`/`) es un one-pager real**, no hay páginas separadas para Portfolio/Servicios/Sobre Mí:
 - Hero: "Néstor Horacio Díaz" + tagline + párrafo.
-- `#portfolio` ("Mi trabajo"): grid de 5 cards (screenshot + título + bajada corta), cada una linkeando a su página de detalle (`/barraca-hefesto/`, `/252-plaza/`, `/santa-isabel-fm/`, `/mimosos/`, `/jesus-es-el-camino/` — permalinks planos, sin prefijo).
+- `#portfolio` ("Mi trabajo"): grid de cards (screenshot + título + bajada corta), cada una linkeando a su página de detalle (`/barraca-hefesto/`, `/252-plaza/`, `/santa-isabel-fm/`, `/mimosos/`, `/jesus-es-el-camino/`, `/atalaias-rou/` — permalinks planos, sin prefijo). **Atalaias Rou no está en el sitio WP original** — se agregó a pedido del usuario (sesión 3, ver ROADMAP.md), es un proyecto real en `f:/proyecto astro abril 2026/atalaias-rou` con deploy temporal en Netlify. El resto de la collection `portfolio` sí viene 1:1 del sitio real.
 - `#diseno-web` ("Lo que puedo hacer por tu negocio" — el link de nav dice "Servicios" pero el copy real dice otra cosa): 4 bloques de servicio + "¿Por qué trabajar conmigo?".
 - `#sobre-mi` ("Sobre MI"): bio + 3 subsecciones.
 - Footer: social follow (Facebook/Instagram/WhatsApp), link a Blog, copyright.
