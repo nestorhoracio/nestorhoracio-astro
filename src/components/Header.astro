@@ -1,0 +1,122 @@
+---
+import "../styles/header.css";
+
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/#portfolio", label: "Portfolio" },
+  { href: "/blog/", label: "Blog" },
+  { href: "/#diseno-web", label: "Servicios" },
+  { href: "/#sobre-mi", label: "Sobre Mí" },
+];
+---
+
+<header class="nh-header" id="nhHeader">
+  <div class="nh-header__inner">
+    <a href="/" class="nh-header__logo" aria-label="Néstor Horacio Díaz — inicio">
+      <img id="nhLogo" src="/images/logo/isotipo-full-color.png" alt="Néstor Horacio Díaz" width="44" height="44" />
+    </a>
+
+    <nav class="nh-nav" aria-label="Principal">
+      <ul>
+        {links.map((link) => (
+          <li><a href={link.href} data-nav-link>{link.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <button id="nhMenuToggle" class="nh-menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nhMobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav id="nhMobileMenu" class="nh-mobile-menu" aria-label="Principal (mobile)">
+    <ul>
+      {links.map((link) => (
+        <li><a href={link.href} data-nav-link>{link.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<button id="darkModeToggle" title="Cambiar modo claro/oscuro">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="#F2D22E" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21 12.79A9 9 0 0 1 12.21 3 7 7 0 1 0 21 12.79z"></path>
+  </svg>
+</button>
+
+<script>
+  // Menú mobile — abrir/cerrar
+  const menuToggle = document.getElementById("nhMenuToggle");
+  const mobileMenu = document.getElementById("nhMobileMenu");
+
+  menuToggle?.addEventListener("click", () => {
+    const isOpen = mobileMenu?.classList.toggle("is-open");
+    menuToggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
+  });
+
+  mobileMenu?.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", () => {
+      mobileMenu.classList.remove("is-open");
+      menuToggle?.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  // Dark mode — logo claro/oscuro, localStorage, prefers-color-scheme.
+  // Portado de dark-mode.js del child theme original (ver CLAUDE.md).
+  const logoImage = document.getElementById("nhLogo") as HTMLImageElement | null;
+  const toggle = document.getElementById("darkModeToggle");
+
+  const lightLogoSrc = "/images/logo/isotipo-full-color.png";
+  const darkLogoSrc = "/images/logo/isotipo-black.png";
+
+  const applyDarkMode = (enable: boolean) => {
+    if (logoImage) {
+      logoImage.src = enable ? darkLogoSrc : lightLogoSrc;
+    }
+    document.body.classList.toggle("dark-mode", enable);
+    localStorage.setItem("darkMode", enable ? "enabled" : "disabled");
+  };
+
+  const userPreference = localStorage.getItem("darkMode");
+  if (userPreference === "enabled") {
+    applyDarkMode(true);
+  } else if (userPreference === "disabled") {
+    applyDarkMode(false);
+  } else {
+    applyDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+  }
+
+  toggle?.addEventListener("click", () => {
+    applyDarkMode(!document.body.classList.contains("dark-mode"));
+    toggle.classList.add("clicked");
+    setTimeout(() => toggle.classList.remove("clicked"), 150);
+  });
+
+  // Scroll-spy — resalta el link del home a la sección visible.
+  // Portado de menu-scroll.js. Si la página no tiene esas secciones (blog,
+  // páginas de proyecto), no hace nada.
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
+  const sections = document.querySelectorAll<HTMLElement>("#portfolio, #diseno-web, #sobre-mi");
+  const header = document.getElementById("nhHeader");
+
+  if (navLinks.length && sections.length && header) {
+    const highlightMenu = () => {
+      const activationLine = window.scrollY + header.offsetHeight + 50;
+      let activeId: string | null = null;
+
+      sections.forEach((section) => {
+        if (section.offsetTop <= activationLine) {
+          activeId = section.id;
+        }
+      });
+
+      navLinks.forEach((link) => {
+        const anchor = link.getAttribute("href")?.split("#")[1];
+        link.classList.toggle("is-active", Boolean(anchor) && anchor === activeId);
+      });
+    };
+
+    window.addEventListener("scroll", highlightMenu);
+    highlightMenu();
+  }
+</script>

@@ -1,0 +1,112 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import "../styles/home.css";
+
+const portfolio = (await getCollection("portfolio")).sort((a, b) => a.data.order - b.data.order);
+
+const services = [
+  {
+    title: "Diseño y Desarrollo Web a Medida.",
+    text: "Construyo sitios web profesionales adaptados a las necesidades reales de tu negocio. Trabajo con WordPress FSE, Astro y Divi según lo que cada proyecto requiera — sin plantillas genéricas, sin soluciones de copia y pega.",
+  },
+  {
+    title: "Integraciones con Inteligencia Artificial",
+    text: "Integro asistentes IA en tus sitios web — chatbots que responden preguntas de tus clientes, calculadoras inteligentes, catálogos con recomendaciones automáticas. Todo conectado a tu negocio real, no a respuestas genéricas.",
+  },
+  {
+    title: "Mantenimiento y Seguridad",
+    text: "Un sitio web necesita cuidado constante. Me encargo de las actualizaciones, backups automáticos, seguridad, caché y performance para que vos te concentres en tu negocio y no en la tecnología.",
+  },
+  {
+    title: "SEO Técnico y Performance",
+    text: "Optimizo tu sitio para que Google lo encuentre y tus visitantes no se vayan por la lentitud. Configuro Rank Math, Search Console, Google Analytics y todo lo necesario para que tu presencia online trabaje por vos las 24 horas.",
+  },
+];
+
+const about = [
+  {
+    title: "Lo que uso para construir",
+    text: "Trabajo con WordPress FSE y Divi para sitios que necesitan un panel de administración potente, y con Astro para sitios estáticos ultrarrápidos con deploy automático. Según el proyecto elijo la herramienta correcta, no la que más conozco.",
+  },
+  {
+    title: "Inteligencia Artificial integrada",
+    text: "Integro la API de Claude (Anthropic) en los proyectos que lo requieren — asistentes de atención al cliente, calculadoras inteligentes, catálogos con recomendaciones personalizadas y formularios de contacto potenciados con IA. La tecnología al servicio del negocio, no al revés.",
+  },
+  {
+    title: "Lo que me diferencia",
+    text: "No trabajo con plantillas. Cada proyecto arranca desde cero pensando en el cliente, su negocio y sus objetivos. Me encargo de todo el proceso — diseño, desarrollo, deploy, seguridad, SEO y mantenimiento — para que vos solo te preocupes por tu negocio.",
+  },
+];
+---
+
+<Layout
+  title="Néstor Horacio Díaz — Desarrollo web a medida"
+  description="Desarrollo web personalizado con WordPress y Astro para negocios que quieren crecer. Desde Paso de los Toros para toda Latinoamérica."
+>
+  <main>
+    <section class="section hero">
+      <div class="section__inner">
+        <h1>Néstor Horacio Díaz</h1>
+        <h2>Sitios web hechos para tu negocio, no para todos los negocios.</h2>
+        <p>Desarrollo web personalizado con WordPress y Astro para negocios que quieren crecer. Desde Paso de los Toros para toda Latinoamérica.</p>
+      </div>
+    </section>
+
+    <section id="portfolio" class="section">
+      <div class="section__inner">
+        <h2>Mi trabajo</h2>
+        <p class="section__lead">Proyectos reales para negocios reales.</p>
+        <div class="portfolio-grid">
+          {portfolio.map((project) => (
+            <article class="portfolio-card">
+              <a href={`/${project.id}/`}>
+                <Image src={project.data.cover} alt="" width={480} height={220} />
+              </a>
+              <div class="portfolio-card__body">
+                <h4><a href={`/${project.id}/`}>{project.data.title}</a></h4>
+                <p>{project.data.summary}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="diseno-web" class="section">
+      <div class="section__inner">
+        <h2>Lo que puedo hacer por tu negocio</h2>
+        <div class="services-grid">
+          {services.map((service) => (
+            <div class="service-item">
+              <h4>{service.title}</h4>
+              <p>{service.text}</p>
+            </div>
+          ))}
+        </div>
+        <div class="section--why">
+          <h3>¿Por qué trabajar conmigo?</h3>
+          <p>Tengo formación en Administración de Empresas — eso significa que entiendo tu negocio antes de escribir una línea de código. No te vendo tecnología por la tecnología: te construyo una herramienta que resuelve un problema real y genera resultados medibles.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="sobre-mi" class="section">
+      <div class="section__inner">
+        <h2>Sobre mí</h2>
+        <div class="about-bio">
+          <p>Soy Néstor Horacio Díaz, desarrollador web freelance desde Paso de los Toros, Uruguay. Diseño y construyo sitios web que funcionan de verdad — rápidos, seguros y adaptados a las necesidades reales de cada negocio.</p>
+        </div>
+        <div class="about-grid">
+          {about.map((item) => (
+            <div>
+              <h4>{item.title}</h4>
+              <p>{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>

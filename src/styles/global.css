@@ -1,0 +1,152 @@
+/* Diseño portado del child theme Divi original de nestorhoracio.com
+   (functions.php / style.css revisados el 2026-08-17, luego descartados —
+   ver CLAUDE.md sección "Diseño"). Tokens de color y tipografía sin tocar;
+   lo que dependía de clases de Divi (.et_pb_section, .et-menu, etc.) se deja
+   afuera hasta armar los componentes reales (Header, Footer, BlogCard). */
+
+@font-face {
+  font-family: 'Blinker';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/blinker-v14-latin_latin-ext-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Blinker';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/blinker-v14-latin_latin-ext-600.woff2') format('woff2');
+}
+
+:root {
+  /* Paleta de marca — isotipo NH */
+  --color-primario:    #1F7268;   /* Teal oscuro */
+  --color-acento:      #9CDDCF;   /* Teal claro — hover y detalles */
+  --color-secundario:  #F2921D;   /* Ámbar — halo del isotipo */
+
+  /* Light mode */
+  --bg-principal:      #F2F0ED;
+  --bg-superficie:     #E8E5E1;
+  --texto-principal:   #1A1A1A;
+  --texto-suave:       #555555;
+  --titulares:         #1F7268;
+  --enlaces:           #1F7268;
+  --enlaces-hover:     #9CDDCF;
+
+  /* Dark mode */
+  --dark-bg:           #2A2A2A;
+  --dark-superficie:   #333333;
+  --dark-texto:        #F0F0F0;
+  --dark-texto-suave:  #AAAAAA;
+  --dark-titulares:    #9CDDCF;
+  --dark-enlaces:      #9CDDCF;
+  --dark-enlaces-hover:#F2921D;
+
+  /* Header y footer — siempre oscuros, en los dos modos */
+  --header-bg:         #0F0F0F;
+  --footer-bg:         #0F0F0F;
+  --footer-texto:      #CCCCCC;
+
+  /* Sistema */
+  --radius-global:     0.4rem;
+  --transicion-rapida: all 0.3s ease;
+}
+
+body.dark-mode {
+  --bg-principal:    var(--dark-bg);
+  --bg-superficie:   var(--dark-superficie);
+  --texto-principal: var(--dark-texto);
+  --texto-suave:     var(--dark-texto-suave);
+  --titulares:       var(--dark-titulares);
+  --enlaces:         var(--dark-enlaces);
+  --enlaces-hover:   var(--dark-enlaces-hover);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-principal);
+  color: var(--texto-principal);
+  font-family: 'Blinker', sans-serif;
+  font-size: 1.4rem;
+  line-height: 1.9;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Blinker', sans-serif;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 0;
+  color: var(--titulares);
+}
+
+h1 { font-size: 3rem;   letter-spacing: -0.5px; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.8rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem;   }
+
+p {
+  color: var(--texto-principal);
+}
+
+a {
+  color: var(--enlaces);
+  text-decoration: none;
+  transition: var(--transicion-rapida);
+}
+
+a:hover {
+  color: var(--enlaces-hover);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Botón — antes era .nh-btn / .et_pb_button, unificado en .btn */
+.btn {
+  background-color: var(--color-primario);
+  color: #FFFFFF;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  font-family: 'Blinker', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-global);
+  transition: var(--transicion-rapida);
+  display: inline-block;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--color-acento);
+  color: #1A1A1A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
+}
+
+@media (max-width: 980px) {
+  body { font-size: 1.2rem; }
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 1.1rem; }
+  h1   { font-size: 1.8rem; }
+  h2   { font-size: 1.5rem; }
+}

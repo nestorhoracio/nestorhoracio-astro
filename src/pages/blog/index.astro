@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/blog.css";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat("es-UY", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
+---
+
+<Layout title="Blog — Néstor Horacio Díaz" description="Artículos sobre diseño web, WordPress, Astro e Inteligencia Artificial aplicada a sitios web.">
+  <main class="blog-hub">
+    <h1>Blog</h1>
+    <div class="blog-grid">
+      {posts.map((post) => (
+        <article class="post-card">
+          <a href={`/${post.id}/`}>
+            {post.data.cover ? (
+              <Image src={post.data.cover} alt="" width={480} height={220} />
+            ) : (
+              <div style="height:220px;background-color:var(--color-primario);" />
+            )}
+          </a>
+          <div class="post-card__body">
+            <p class="post-card__meta">{post.data.category} · <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time></p>
+            <h2><a href={`/${post.id}/`}>{post.data.title}</a></h2>
+            <p>{post.data.description}</p>
+            <a class="post-card__more" href={`/${post.id}/`}>Leer más</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </main>
+</Layout>

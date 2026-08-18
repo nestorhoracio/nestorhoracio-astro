@@ -1,0 +1,43 @@
+.nh-footer {
+  padding: 1.5rem 1rem;
+  background-color: var(--footer-bg);
+  text-align: center;
+}
+
+.nh-footer__social {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.nh-footer__social a {
+  display: inline-block;
+  color: var(--color-primario);
+  transition: var(--transicion-rapida);
+}
+
+.nh-footer__social a:hover {
+  color: var(--color-secundario);
+  transform: scale(1.2) translateY(-3px);
+}
+
+.nh-footer__social svg {
+  display: block;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.nh-footer p,
+.nh-footer a {
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--footer-texto);
+  opacity: 0.85;
+}
+
+.nh-footer a:hover {
+  opacity: 1;
+}

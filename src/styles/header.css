@@ -1,0 +1,197 @@
+.nh-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 999;
+  background-color: var(--header-bg);
+  transition: background-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.nh-header__inner {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nh-header__logo {
+  display: block;
+  line-height: 0;
+}
+
+.nh-header__logo img {
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.nh-header__logo:hover img {
+  transform: scale(1.05);
+}
+
+/* Nav desktop — píldora flotante */
+.nh-nav {
+  display: none;
+}
+
+@media (min-width: 800px) {
+  .nh-nav {
+    display: block;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    padding: 0.4rem 0.5rem;
+  }
+
+  .nh-nav ul {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nh-nav a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #F0F0F0;
+    font-family: 'Blinker', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-radius: 999px;
+    transition: var(--transicion-rapida);
+  }
+
+  .nh-nav a:hover,
+  .nh-nav a.is-active {
+    color: var(--color-secundario);
+  }
+}
+
+/* Botón hamburguesa — solo mobile */
+.nh-menu-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.nh-menu-toggle span {
+  display: block;
+  height: 2px;
+  background-color: #F0F0F0;
+  border-radius: 2px;
+}
+
+@media (min-width: 800px) {
+  .nh-menu-toggle {
+    display: none;
+  }
+}
+
+/* Menú mobile — desplegable debajo del header */
+.nh-mobile-menu {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #0F0F0F;
+  border-radius: 0 0 10px 10px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  z-index: 998;
+}
+
+.nh-mobile-menu.is-open {
+  max-height: 400px;
+}
+
+.nh-mobile-menu ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nh-mobile-menu a {
+  display: block;
+  padding: 0.9rem 1.5rem;
+  color: #F0F0F0;
+  font-family: 'Blinker', sans-serif;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nh-mobile-menu a:hover,
+.nh-mobile-menu a.is-active {
+  color: var(--color-secundario);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 800px) {
+  .nh-mobile-menu {
+    display: none;
+  }
+}
+
+/* Compensar el header fijo */
+body {
+  padding-top: 60px;
+}
+
+/* Toggle de dark mode — círculo fijo abajo a la derecha */
+#darkModeToggle {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1000;
+  border: 2px solid var(--color-secundario);
+  border-radius: 50%;
+  padding: 12px;
+  cursor: pointer;
+  background-color: #1A1A1A;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  transition: var(--transicion-rapida);
+}
+
+#darkModeToggle svg {
+  display: block;
+}
+
+#darkModeToggle:hover {
+  background-color: #2C2C2C;
+  transform: scale(1.1);
+  border-color: var(--color-primario);
+}
+
+#darkModeToggle.clicked {
+  transform: scale(0.9);
+}
+
+@media (max-width: 980px) {
+  .nh-header {
+    height: 50px;
+  }
+
+  .nh-mobile-menu {
+    top: 50px;
+  }
+
+  body {
+    padding-top: 50px;
+  }
+}
