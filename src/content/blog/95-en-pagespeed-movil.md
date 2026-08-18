@@ -27,21 +27,11 @@ Un <strong>95 en Rendimiento Móvil</strong> y un <strong>100 en Ordenador</stro
 En esta guía definitiva, no te daré teorías vagas. Voy a compartir el <em>stack exacto</em> y los <em>ajustes precisos</em> que usé para lograr estos puntajes. El secreto no está en instalar 20 plugins de optimización; está en la "santísima trinidad" del rendimiento moderno:
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Un servidor de hosting de calidad (<strong>LiteSpeed Server</strong>).</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>El plugin de caché correcto (<strong>LiteSpeed Cache</strong>).</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Una configuración precisa que <strong>respete</strong> cómo funciona Divi (y no rompa el sitio en el proceso).</li>
-</ol>
 </ol>
 
 Si estás cansado de pelear con tu sitio Divi, sigue leyendo. Te mostraré exactamente cómo lo hice.
@@ -51,21 +41,11 @@ Si estás cansado de pelear con tu sitio Divi, sigue leyendo. Te mostraré exact
 Antes de sumergirnos en la configuración, detengámonos un segundo: ¿por qué es tan vital un sitio web rápido? La respuesta es simple: afecta a todo.
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Google te Premia:</strong> Desde 2021, la velocidad de carga (específicamente las métricas Core Web Vitals) es un factor directo de <strong>posicionamiento SEO</strong>. Un sitio lento no rankeará bien, por mucho contenido bueno que tengas.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Tus Visitantes se Quedan:</strong> Estudios demuestran que si una página tarda más de 3 segundos en cargar en móvil, más de la mitad de los visitantes la abandonan. ¡Pierdes clientes antes de que siquiera vean tu oferta!</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Las Conversiones Aumentan:</strong> Un sitio rápido se siente profesional, confiable. Mejora la experiencia del usuario y, por lo tanto, la probabilidad de que te contacten o compren tus productos.</li>
-</ul>
 </ul>
 
 <strong>La Fórmula Ganadora:</strong>
@@ -73,21 +53,11 @@ Antes de sumergirnos en la configuración, detengámonos un segundo: ¿por qué 
 Lograr esa velocidad no depende de un solo truco, sino de una combinación sólida:
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Un Buen Motor (El Servidor):</strong> Necesitas una base rápida. Aquí es donde <strong>LiteSpeed Server</strong> brilla.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Un Buen Mecánico (La Caché):</strong> Necesitas un sistema inteligente que "prepare" tu sitio para servirlo rápido. El plugin <strong>LiteSpeed Cache</strong> es el mejor copiloto para su servidor homónimo.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Un Buen Chasis (El Tema):</strong> Necesitas un tema bien construido que no genere "peso muerto". <strong>Divi</strong>, a pesar de los mitos, es perfectamente capaz si se configura bien.</li>
-</ol>
 </ol>
 
 Ahora, veamos cómo encajan estas piezas.
@@ -121,144 +91,84 @@ Después de muchas pruebas (y errores), llegué a la configuración que me dio e
 <strong>1. Pestaña [1] Ajustes de CSS:</strong>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Minificar CSS:</strong><strong><code>ON</code></strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Elimina espacios y comentarios innecesarios del código CSS, haciendo los archivos más pequeños y rápidos de descargar. Es una optimización segura.</li>
 </ul>
-</ul>
 
 </li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Combinar CSS:</strong><strong><code>OFF</code></strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> <strong>Este es el ajuste CLAVE para Divi.</strong> Aunque combinar archivos suena bien, con Divi suele romper el orden en que se aplican los estilos, haciendo que tu diseño se vea mal. Es mucho más seguro (y casi igual de rápido) dejarlo apagado y confiar en la minificación y en HTTP/2 (que maneja múltiples archivos eficientemente).</li>
 </ul>
-</ul>
 
 </li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><em>Resto de opciones:</em> Déjalas en sus valores por defecto (OFF).</li>
-</ul>
 </ul>
 
 <strong>2. Pestaña [2] Ajustes de JS (JavaScript):</strong>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Minificar JS:</strong><strong><code>ON</code></strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Igual que con el CSS, reduce el tamaño de los archivos JavaScript eliminando lo innecesario. Optimización segura.</li>
 </ul>
-</ul>
 
 </li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Combinar JS:</strong><strong><code>OFF</code></strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> <strong>Segundo ajuste CLAVE.</strong> Combinar JS es aún más peligroso que combinar CSS, especialmente si usas scripts personalizados (como los que usamos para el modo oscuro o el resaltado del menú). Puede romper la funcionalidad del sitio fácilmente. Déjalo apagado.</li>
 </ul>
-</ul>
 
 </li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Aplazar la carga de JS:</strong><strong><code>Diferido</code></strong> (Deferred)
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Esto le dice al navegador que cargue el contenido HTML y CSS primero, y deje los archivos JavaScript (que suelen ser más pesados y bloqueantes) para el final. Mejora enormemente la percepción de velocidad inicial.</li>
 </ul>
-</ul>
 
 </li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><em>Resto de opciones:</em> Déjalas en sus valores por defecto (OFF).</li>
-</ul>
 </ul>
 
 <strong>3. Pestaña [4] Ajustes de Medios:</strong>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Carga diferida de imágenes (Lazy Load):</strong><strong><code>ON</code></strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Una de las optimizaciones más impactantes. Las imágenes solo se cargan cuando el usuario está a punto de verlas al hacer scroll. Acelera drásticamente el tiempo de carga inicial de la página.</li>
 </ul>
-</ul>
 
 </li>
-</ul>
 </ul>
 
 <strong>4. Optimización de Imágenes (WebP):</strong>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Ve a <code>LiteSpeed Cache > Optimización de Imágenes > [2] Ajustes de optimización de imágenes</code>.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Formato de imagen de próxima generación:</strong> Selecciona <strong><code>WebP</code></strong>.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>WebP/AVIF para srcset adicional:</strong> Ponlo en <strong><code>ON</code></strong>.
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> WebP es un formato de imagen moderno mucho más ligero que JPG o PNG. LiteSpeed creará automáticamente copias WebP de tus imágenes y las servirá a los navegadores compatibles, reduciendo significativamente el "peso" de tu página. (Recuerda que quizás necesites crear una cuenta gratuita en QUIC.cloud para optimizar todas tus imágenes).</li>
 </ul>
-</ul>
 
 </li>
-</ul>
 </ul>
 
 <strong>5. Optimización de Base de Datos (Mantenimiento):</strong>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Ve a <code>LiteSpeed Cache > Optimización de BD</code>.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Limpieza:</strong> Usa la pestaña <code>[1] Gestionar</code> para limpiar revisiones antiguas, borradores automáticos y transitorios periódicamente.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Prevención:</strong> En la pestaña <code>[2] Ajustes de optimización de BD</code>, limita el <strong><code>Número máximo de revisiones</code></strong> a un valor bajo (ej. <code>5</code>) para evitar que la base de datos crezca innecesariamente.</li>
-</ul>
 </ul>
 
 <strong>¡Importante! Después de guardar estos cambios, recuerda siempre hacer una "Purga Total"</strong> (<code>LiteSpeed Cache > Herramientas > Purgar todo</code> y también <code>Divi > Opciones del Tema > Constructor > Avanzado > Limpiar</code>) y <strong>probar tu sitio en una ventana de incógnito</strong> para asegurarte de que todo se vea y funcione correctamente.
@@ -270,42 +180,26 @@ Esta configuración es el corazón de la optimización. Es el equilibrio perfect
 Si bien la configuración de LiteSpeed Cache es el motor principal para alcanzar ese 95+ en PageSpeed, hay algunas prácticas adicionales que implementé en <code class="">nestorhoracio.com</code> y que recomiendo siempre para mantener un sitio WordPress saludable y ágil:
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Usar un Tema Hijo (<code>Child Theme</code>):</strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Como hemos visto en mi propio sitio, todas las personalizaciones importantes (código PHP en <code class="">functions.php</code>, estilos en <code class="">style.css</code>, scripts JS) las realizamos en un <strong>tema hijo</strong>. Esto asegura que, cuando actualices Divi, no pierdas ninguna de tus modificaciones. Además, mantiene el código organizado y facilita el mantenimiento. Es la forma profesional de trabajar con cualquier tema de WordPress.</li>
 </ul>
-</ul>
 
 </li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Optimizar Imágenes <em>Antes</em> de Subirlas:</strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Aunque LiteSpeed Cache hace un trabajo fantástico creando versiones WebP, siempre es mejor subir imágenes que ya tengan un tamaño y peso razonables. Herramientas online gratuitas como TinyPNG o Squoosh pueden reducir drásticamente el peso de tus JPEGs y PNGs <em>antes</em> de que lleguen a tu biblioteca de medios. Esto ahorra espacio en tu hosting y acelera el proceso de optimización de LiteSpeed.</li>
 </ul>
-</ul>
 
 </li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Minimalismo de Plugins:</strong>
-<ul class="wp-block-list">
 <ul class="wp-block-list">
 <li><em>¿Por qué?</em> Cada plugin que instalas añade código, potenciales conflictos y, a menudo, carga adicional (CSS, JS). Antes de instalar un nuevo plugin, pregúntate: "¿Es absolutamente esencial?". En mi sitio, utilizamos un stack muy reducido y cuidadosamente seleccionado: Divi, LiteSpeed Cache, Rank Math SEO, Solid Security y UpdraftPlus. Nada más que lo estrictamente necesario para un sitio profesional, rápido y seguro.</li>
 </ul>
-</ul>
 
 </li>
-</ol>
 </ol>
 
 Estos "pequeños" detalles suman. Mantener tu sitio limpio, organizado y optimizado desde la base facilita enormemente el trabajo de las herramientas de caché y contribuye al rendimiento general.
@@ -319,27 +213,13 @@ Hemos desmentido el mito. Divi, combinado con las herramientas adecuadas y los a
 <strong>¿Los beneficios?</strong>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Mejor posicionamiento en Google (SEO).</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Menor tasa de rebote (visitantes que se quedan).</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Una imagen más profesional y confiable.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Mayor probabilidad de conversión (clientes que te contactan).</li>
-</ul>
 </ul>
 
 Implementar estos pasos requiere atención al detalle, pero el resultado vale cada minuto invertido.

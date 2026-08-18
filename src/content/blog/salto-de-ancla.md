@@ -30,27 +30,13 @@ El culpable es la propia función de <strong>"desplazamiento suave" (smooth scro
 Así es como funciona (y por qué falla):
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Cuando un visitante hace clic en un enlace de ancla (ej. <code>/#servicios</code>), Divi <strong>impide</strong> que el navegador haga su "salto" instantáneo por defecto.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>En su lugar, el <strong>JavaScript de Divi toma el control</strong>.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>El script localiza la sección (la que tiene el ID <code>#servicios</code>) y le pregunta al navegador: "¿Cuál es tu posición exacta en la parte superior de la página?" (su <code>offsetTop</code>).</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Luego, el script anima el desplazamiento de la pantalla <em>exactamente</em> a esa coordenada de píxel.</li>
-</ol>
 </ol>
 
 <strong>Aquí está el fallo:</strong> El script de Divi es "ciego". No tiene en cuenta la altura de tu <strong>cabecera fija del Theme Builder</strong>, que está flotando por encima de todo. Simplemente te lleva al borde superior de la sección, y ese borde queda, por supuesto, tapado por tu cabecera.
@@ -68,43 +54,25 @@ Aquí te resumo los métodos que probé y por qué no funcionaron, para que no p
 <h4 class="wp-block-heading">Intento #1: El CSS Moderno (<code>scroll-margin-top</code>)</h4>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>La Teoría:</strong> Esta es la propiedad CSS moderna, diseñada exactamente para este problema. Con una simple regla como <code>scroll-margin-top: 140px;</code>, le dices al navegador: "Cuando saltes a esta ancla, por favor, detente 140 píxeles <em>antes</em> de llegar a ella".</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Por Qué Falló:</strong> Como explicamos en la sección anterior, el <strong>script de Divi anula el comportamiento nativo del navegador.</strong> El script no le pide al navegador que salte, sino que calcula una posición de píxel exacta y anima el <code>scrollTop</code> hasta allí. La propiedad <code>scroll-margin-top</code> nunca llega a actuar.</li>
-</ul>
 </ul>
 
 <h4 class="wp-block-heading">Intento #2: El "Truco" Clásico de CSS (<code>padding-top</code> y <code>margin-top</code>)</h4>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>La Teoría:</strong> Esta es la solución de la vieja escuela. Aplicas un <code>padding-top: 140px;</code> a tu sección para "empujar" el contenido hacia abajo, y luego un <code>margin-top: -140px;</code> para "subir" la sección y que no quede un espacio en blanco.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Por Qué Falló:</strong> De nuevo, el script de Divi es demasiado listo. No calcula la posición del <em>contenido</em> dentro de la sección; calcula la posición de la <strong>sección misma</strong>. Aunque el contenido esté 140px más abajo, el script sigue animando el scroll hasta el borde superior de la sección (<code>offsetTop</code>), que sigue estando detrás de la cabecera.</li>
-</ul>
 </ul>
 
 <h4 class="wp-block-heading">Intento #3: La "Guerra de Scripts" (JavaScript Personalizado)</h4>
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>La Teoría:</strong> Si el problema es un script de Divi, ¡luchemos contra él con nuestro propio script! Usando jQuery o JavaScript, podemos "interceptar" el clic (<code>e.preventDefault()</code>), detener el script de Divi y calcular manualmente el salto correcto restando la altura de la cabecera.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>Por Qué Falló (O por qué es una mala idea):</strong> Esto es como intentar cambiar una pieza del motor de un coche en marcha. Entras en una "guerra de scripts". Puede que soluciones el salto, pero es muy probable que <strong>rompas otras funciones</strong> (como el script que resalta el enlace activo en el menú mientras haces scroll) o que tu script entre en conflicto con futuras actualizaciones de Divi. Es una solución frágil, complicada y poco mantenible.</li>
-</ul>
 </ul>
 
 Tras probar todo esto, me di cuenta de que el enfoque era erróneo. La solución no era luchar contra el script de Divi. Era aceptarlo y usar una especificidad de CSS aún mayor para <em>ganarle la partida</em> al diseño.
@@ -148,15 +116,9 @@ padding-top: 140px !important;
 Este código gana la batalla por dos razones:
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Selector Ultra-Específico:</strong> La clave es <code>body.home .et-boc .et-l--body .et_pb_section#infoproductos</code>. Al ser tan largo y específico, tiene más "peso" que los estilos por defecto de Divi. Le estamos diciendo al navegador: "Ignora las reglas de padding de Divi para esta sección; esta es la que manda".</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong><code>padding-top: 140px !important;</code>:</strong> El <code>padding-top</code> crea un "relleno" interno en la parte superior de la sección azul. El script de Divi sigue saltando al borde de la sección, pero el <em>contenido</em> (tus filas y módulos) ahora empieza 140px más abajo, quedando perfectamente visible. El <code>!important</code> es el seguro final para garantizar que nuestra regla gane siempre.</li>
-</ol>
 </ol>
 
 <hr class="wp-block-separator has-alpha-channel-opacity" />

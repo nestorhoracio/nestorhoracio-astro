@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
+import { websiteSchema } from "../lib/seo";
 import "../styles/home.css";
 
 const portfolio = (await getCollection("portfolio")).sort((a, b) => a.data.order - b.data.order);
@@ -44,6 +45,7 @@ const about = [
 <Layout
   title="Néstor Horacio Díaz — Desarrollo web a medida"
   description="Desarrollo web personalizado con WordPress y Astro para negocios que quieren crecer. Desde Paso de los Toros para toda Latinoamérica."
+  jsonLd={websiteSchema()}
 >
   <main>
     <section class="section hero">

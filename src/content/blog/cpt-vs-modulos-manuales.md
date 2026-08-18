@@ -32,40 +32,20 @@ No me malinterpretes. No elegí el método manual a la ligera. Como profesional,
 Sobre el papel, la solución del CPT era, por lejos, la más elegante y profesional. Las ventajas parecían obvias:
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Organización Impecable:</strong> La idea de tener un menú "Infoproductos" en mi panel de WordPress, completamente separado de mis "Páginas" y "Entradas", era increíblemente atractiva. Mantenía la base de datos limpia y la gestión de contenidos ordenada.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>Escalabilidad a Futuro:</strong> Si en el futuro mi portafolio de infoproductos crecía a 50 o 100 artículos, la gestión sería sencilla. Añadir, editar o eliminar productos sería tan fácil como manejar una entrada de blog, sin tener que tocar el diseño de la página de inicio.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li><strong>La "Magia" del Theme Builder (El Gran Atractivo):</strong> Pero la verdadera promesa para un usuario de Divi estaba en el <strong>Constructor de Temas</strong>. La teoría era simple:
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Creaba mi CPT "Infoproducto" (usando el plugin CPT UI).</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Creaba mis campos personalizados, como "Enlace Externo" (usando Advanced Custom Fields – ACF).</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Iba al Constructor de Temas de Divi, diseñaba una plantilla <em>una sola vez</em> usando un Módulo de Blog para listar los CPTs y conectaba los títulos, imágenes y botones al <strong>Contenido Dinámico</strong> de ACF.</li>
-</ul>
 </ul>
 
 </li>
-</ol>
 </ol>
 
 El resultado sería un sistema 100% automatizado. Cada vez que añadiera un nuevo infoproducto, este aparecería mágicamente en la página de inicio, con el diseño perfecto y el enlace correcto.
@@ -113,15 +93,9 @@ Y fue entonces cuando mi lado de <strong>Administrador de Empresas</strong> (de 
 Dejé de mirar el código y empecé a mirar el <strong>balance costo-beneficio</strong> del problema.
 
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>El Costo:</strong> Ya había invertido horas en configurar plugins (CPT UI, ACF), depurar módulos rotos de Divi y buscar soluciones en foros. El sistema era complejo, requería dos plugins adicionales (más peso para el sitio, más puntos de fallo) y, lo peor de todo, <strong>no funcionaba</strong>.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li><strong>El Beneficio Esperado:</strong> La "elegancia" de una base de datos limpia y la escalabilidad de poder añadir 100 productos algún día.</li>
-</ul>
 </ul>
 
 Me hice la pregunta clave: <strong>¿Cuál es el objetivo real aquí?</strong>
@@ -139,52 +113,24 @@ Desactivé los plugins CPT UI y ACF, volví al Constructor de Temas y borré el 
 Una vez que borré el módulo de Blog defectuoso, volví a la plantilla de mi Cuerpo Personalizado en el Constructor de Temas. ¿Mi plan ahora? El método directo, el que sabía que no podía fallar.
 
 <ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Añadí una nueva <strong>Fila (verde)</strong>, en mi caso, de tres columnas, para mostrar los productos uno al lado del otro.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>En la primera columna, construí mi "tarjeta de producto" manualmente. Para esto, solo necesité tres módulos estándar de Divi:
 <ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Un módulo de <strong>Imagen</strong> para la foto del producto.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Un módulo de <strong>Texto</strong> para el título y la descripción.</li>
-</ul>
-</ul>
 
-<ul class="wp-block-list">
-<ul class="wp-block-list">
 <li>Un módulo de <strong>Botón</strong> para el enlace de compra.</li>
-</ul>
 </ul>
 
 </li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Abrí los ajustes del módulo de <strong>Botón</strong>, escribí "Ver Producto" y pegué la URL de venta <em>directamente</em> en el campo "Enlace".</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Una vez que diseñé esa primera columna exactamente como quería, simplemente la <strong>dupliqué</strong> para la segunda y tercera columna.</li>
-</ol>
-</ol>
 
-<ol start="1" class="wp-block-list">
-<ol start="1" class="wp-block-list">
 <li>Cambié las imágenes, textos y enlaces de las copias.</li>
-</ol>
 </ol>
 
 <strong>¿El resultado?</strong>

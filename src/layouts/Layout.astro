@@ -6,10 +6,15 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description: string;
+  image?: string;
+  type?: "website" | "article";
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title, description } = Astro.props;
+const { title, description, image, type = "website", jsonLd } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image ?? "/images/logo/isotipo-full-color.png", Astro.site);
+const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <!doctype html>
@@ -18,6 +23,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/images/logo/isotipo-full-color.png" />
+    <link rel="apple-touch-icon" href="/images/logo/isotipo-full-color.png" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
@@ -32,10 +38,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       crossorigin
     />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={imageURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+
+    {jsonLdList.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
+    ))}
   </head>
   <body>
     <Header />

@@ -1,0 +1,38 @@
+# nestorhoracio-astro — sitio 100% estático, este es el único punto de
+# configuración de Apache/HostGator. Ver CLAUDE.md.
+
+# Página 404 real (Astro genera 404.html en la raíz del build)
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # https siempre
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # www -> sin www (el dominio canónico es nestorhoracio.com, ver astro.config.mjs)
+  RewriteCond %{HTTP_HOST} ^www\.nestorhoracio\.com [NC]
+  RewriteRule ^ https://nestorhoracio.com%{REQUEST_URI} [L,R=301]
+
+  # Barra final siempre (permalinks de Astro terminan en "/", trailingSlash: 'always')
+  # No aplica a archivos reales (con extensión) ni a la raíz.
+  RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]+|/)$
+  RewriteRule ^(.*)$ /$1/ [L,R=301]
+</IfModule>
+
+# Cache largo para los assets con hash en el nombre (_astro/) — son
+# inmutables, un deploy nuevo genera nombres de archivo distintos.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>

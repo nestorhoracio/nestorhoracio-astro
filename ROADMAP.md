@@ -11,7 +11,7 @@
 - `Layout.astro`, `Header.astro` (dark mode con swap de logo + scroll-spy + menú mobile, todo funcional) y `Footer.astro`.
 - Páginas: `index.astro` (home one-pager, con contenido real transcripto del sitio en vivo), `blog/index.astro` (hub), `[slug].astro` (plantilla plana compartida por posts de blog y proyectos de portfolio), `contacto/index.astro` + `public/contact.php` (formulario funcional, ver CLAUDE.md), `politica-de-privacidad/index.astro` (redactada de cero, ver CLAUDE.md).
 
-Lo que **no** existe todavía: SEO real (JSON-LD, `robots.txt`, favicon en más tamaños), `.htaccess`, y todo lo de deploy (repo en GitHub, GitHub Actions, cuenta FTP) — **deploy queda para el final a pedido del usuario**, que quiere verlo bien terminado antes de subirlo.
+**SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). Lo que **no** existe todavía: una imagen OG de marca (1200×630, hoy el fallback es el isotipo circular) y todo lo de deploy (repo en GitHub, GitHub Actions, cuenta FTP) — **deploy queda para el final a pedido del usuario**, que quiere verlo bien terminado antes de subirlo. El usuario ya dio el visto bueno a la parte visual/UX ("para mi visión ya estaría pronto").
 
 ## Decisiones tomadas en la sesión de arranque (2026-08-17)
 
@@ -28,14 +28,18 @@ Lo que **no** existe todavía: SEO real (JSON-LD, `robots.txt`, favicon en más 
 **Deploy pospuesto a propósito** — decisión del usuario (2026-08-17, sesión 2): quiere ver el sitio bien terminado antes de subirlo a HostGator. No arrancar el repo en GitHub / GitHub Actions / cuenta FTP hasta que lo pida.
 
 1. **Antes de subir en algún momento**: completar `$destinatario` en `public/contact.php` con el email real (hoy es un placeholder, ver CLAUDE.md) y que el usuario revise el texto de `politica-de-privacidad/index.astro` (lo redacté yo, es un borrador razonable pero no asesoramiento legal).
-2. **SEO**: componente `<SEO />` propio (ya hay `title`/`description`/`og:*`/canonical básicos en `Layout.astro`, falta JSON-LD, `robots.txt`, verificar `sitemap-index.xml` generado por `@astrojs/sitemap`, favicon real en más tamaños).
-3. Revisar a mano el bug de listas `<ol>`/`<ul>` anidadas duplicadas que traen 3 posts del blog desde WordPress (ver CLAUDE.md) — no es un error de la migración, viene así del contenido original.
-4. Placeholder de portada para los 3 posts sin imagen (`salto-de-ancla`, `ia-asistente-profesional`, `cpt-vs-modulos-manuales`) — hoy es un rectángulo de color liso en `blog/index.astro`, se puede mejorar.
-5. `.htaccess` (trailing slash / 404 real de Apache, hoy el 404 de Astro no está armado).
-6. Revisión visual pasada a mano contra el sitio real — el layout/colores/tipografía están portados fielmente pero no pixel-perfect (por ejemplo el nav desktop es una aproximación de la píldora original, no viene de un archivo fuente).
-7. **Cuando el usuario pida arrancar el deploy**: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo.
+2. (Opcional, no bloqueante) Diseñar una imagen OG de marca 1200×630 — hoy el `og:image` cae al isotipo, que funciona pero no es un banner pensado para compartir en redes.
+3. **Cuando el usuario pida arrancar el deploy**: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo + probar en el hosting real que las reglas de `.htaccess` funcionan (`mod_rewrite`/`mod_expires`/`mod_headers`).
 
 ## Changelog
+
+### 2026-08-17 (sesión 6) — SEO, .htaccess, 404, y fix real del bug de listas
+El usuario dio el visto bueno a lo visual ("para mi visión ya estaría pronto") y pidió seguir con otra cosa — se avanzó con los pendientes técnicos que quedaban antes del deploy:
+- **Bug de listas del blog, arreglado de verdad** (no solo diagnosticado): eran 4 posts, no 3 como decía CLAUDE.md, y el problema real no era solo la duplicación de wrapper sino que además cada paso de una secuencia quedaba como una lista de 1 solo ítem (`<ol start="1">` repetido en vez de un `<ol>` con varios `<li>`) — se veía "1. ... 1. ... 1." en vez de "1. 2. 3.". Arreglado con un script de una sola vez: colapsar duplicados + fusionar listas del mismo tipo separadas solo por una línea en blanco. Verificado con Playwright leyendo la cantidad real de `<li>` por `<ol>`/`<ul>` en el DOM, no solo mirando la captura.
+- **SEO**: `src/lib/seo.ts` con helpers de JSON-LD (`WebSite` en el home, `BlogPosting` en los posts, `CreativeWork` en el portfolio, todos con `Person` compartido). `Layout.astro` ahora acepta `image`/`type`/`jsonLd`; los posts y proyectos pasan su propia portada como `og:image`/`twitter:image` real (vía `getImage`, no solo el isotipo genérico). Agregado `public/robots.txt` con referencia al sitemap y `apple-touch-icon`.
+- **`src/pages/404.astro`**: página propia, con el mismo Layout/Header/Footer que el resto.
+- **`public/.htaccess`**: fuerza HTTPS, fuerza `nestorhoracio.com` sin `www`, agrega `/` final cuando falta, `ErrorDocument 404 /404.html`, cache largo para `/_astro/`. No probado contra HostGator real todavía (recién se puede confirmar en el deploy).
+- `npm run build`: 19 páginas (sumó la 404). Verificado con un script de Playwright que visita las 7 rutas principales y lee la consola: sin errores en ninguna.
 
 ### 2026-08-17 (sesión 5) — Fix de orden del nav (scroll-spy)
 - El usuario notó que el menú "se salía mal" al hacer scroll y diagnosticó bien la causa: `Blog` (una página real, sin ancla) estaba metido en el medio de los 3 links de ancla (Portfolio/Servicios/Sobre Mí), así que el resaltado del scroll-spy "saltaba" un item muerto en el medio del recorrido visual.
