@@ -11,11 +11,12 @@ Migración de **nestorhoracio.com** (portfolio/sitio profesional de desarrollo w
 - Astro (Content Collections, glob loader), CSS con custom properties, sin Tailwind.
 - `astro:assets` para las imágenes.
 - Formulario de contacto vía script PHP propio (HostGator soporta PHP; no se usa un servicio externo).
-- Git + GitHub Actions (build) → deploy por FTP/SFTP a HostGator.
+- JSON-LD (`WebSite`/`BlogPosting`/`CreativeWork`) + `robots.txt` + `.htaccess` para Apache.
+- Git + GitHub Actions (build) → deploy por FTP/SFTP a HostGator (pospuesto hasta que el usuario dé el OK).
 
 ## Estado del proyecto
 
-**El sitio ya build-ea y las 17 páginas se ven bien**: home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 5 páginas de proyecto de portfolio, contacto (formulario funcional vía `contact.php`) y Política de Privacidad — todo con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile). Falta: SEO completo, `.htaccess`, y todo el deploy — **pospuesto a pedido del usuario** hasta que el sitio esté terminado. Detalle completo en [ROADMAP.md](./ROADMAP.md).
+**El sitio está terminado en lo visual/funcional** (el usuario ya dio el visto bueno): 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, og:image por página) y `.htaccess` para Apache. Falta: completar el email destinatario en `contact.php` y todo el deploy — **pospuesto a pedido del usuario**. Detalle completo en [ROADMAP.md](./ROADMAP.md).
 
 ## Instalación y desarrollo local
 
@@ -41,12 +42,16 @@ nestorhoracio-astro/
 ├── public/
 │   ├── fonts/             # Blinker self-hosted (400/600)
 │   ├── images/logo/       # isotipo real (claro/oscuro)
-│   └── contact.php        # procesa el formulario de /contacto/ (único código server-side)
+│   ├── contact.php        # procesa el formulario de /contacto/ (único código server-side)
+│   ├── robots.txt
+│   └── .htaccess          # https, sin www, trailing slash, 404, cache de assets
 └── src/
     ├── content.config.ts  # collections: blog, portfolio
     ├── content/
-    │   ├── blog/          # .md + portada por post
-    │   └── portfolio/     # .md + captura por proyecto (5 proyectos reales)
+    │   ├── blog/          # .md + portada por post (8 posts)
+    │   └── portfolio/     # .md + captura por proyecto (6 proyectos reales)
+    ├── lib/
+    │   └── seo.ts          # helpers de JSON-LD (WebSite/BlogPosting/CreativeWork)
     ├── styles/            # global.css (tokens), header.css, footer.css, home.css, blog.css, contact.css
     ├── layouts/
     │   └── Layout.astro
@@ -58,5 +63,6 @@ nestorhoracio-astro/
         ├── blog/index.astro               # hub del blog
         ├── [slug].astro                   # plantilla plana para posts de blog Y proyectos de portfolio
         ├── contacto/index.astro           # formulario (POST a /contact.php)
-        └── politica-de-privacidad/index.astro
+        ├── politica-de-privacidad/index.astro
+        └── 404.astro
 ```

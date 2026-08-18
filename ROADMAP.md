@@ -2,7 +2,7 @@
 
 ## Estado actual (2026-08-17)
 
-**El sitio ya levanta y las 18 páginas se generan bien** (`npm run build` — verificado con capturas de Playwright en home, un post de blog, una página de portfolio, el hub del blog, contacto, política de privacidad, dark mode y menú mobile; sin errores de consola). Lo que existe:
+**El sitio ya levanta y las 19 páginas se generan bien** (`npm run build` — verificado con capturas y scripts de Playwright en home, blog, portfolio, contacto, política de privacidad, 404, dark mode y menú mobile; sin errores de consola en ninguna ruta). Lo que existe:
 
 - Scaffold de Astro (`package.json`, `astro.config.mjs`, `tsconfig.json`) — mismo patrón minimalista que jesuseselcamino-astro, sin starter template de por medio.
 - `src/content.config.ts` con dos collections: `blog` (8 posts) y `portfolio` (6 proyectos, incluyendo Atalaias Rou — no está en el sitio WP original, se agregó a pedido del usuario con captura de su deploy temporal en Netlify, ver changelog).
