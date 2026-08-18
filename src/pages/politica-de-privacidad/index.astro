@@ -1,0 +1,54 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/blog.css";
+
+const lastUpdated = "17 de agosto de 2026";
+---
+
+<Layout
+  title="Política de Privacidad — Néstor Horacio Díaz"
+  description="Qué datos recopila este sitio, para qué se usan y cómo contactarme por temas de privacidad."
+>
+  <main class="post-entry">
+    <h1>Política de Privacidad</h1>
+    <p class="post-entry__meta">Última actualización: {lastUpdated}</p>
+
+    <div class="post-entry__body">
+      <p>
+        Este sitio (nestorhoracio.com) es operado por Néstor Horacio Díaz Duarte, desarrollador web freelance con sede en Paso de los Toros, Uruguay. Esta política explica qué información se recopila a través del sitio, para qué se usa y qué opciones tenés al respecto.
+      </p>
+
+      <h2>Qué datos recopila este sitio</h2>
+      <p>
+        Este sitio es estático: no tiene base de datos, no usa cookies de seguimiento ni analítica de terceros. Los únicos datos que se manejan son:
+      </p>
+      <ul>
+        <li><strong>Formulario de contacto:</strong> cuando completás el formulario en <a href="/contacto/">/contacto/</a>, el nombre, email y mensaje que ingresás se envían por correo electrónico directamente a mi casilla. No se guardan en ninguna base de datos ni se comparten con terceros — quedan únicamente en mi bandeja de entrada, igual que cualquier email que me escribas directamente.</li>
+        <li><strong>Preferencia de modo oscuro/claro:</strong> el sitio guarda tu preferencia de tema (claro u oscuro) en el almacenamiento local de tu navegador (<code>localStorage</code>). Este dato no sale de tu dispositivo, no me llega a mí de ninguna forma, y no es información personal.</li>
+      </ul>
+
+      <h2>Qué NO hace este sitio</h2>
+      <ul>
+        <li>No usa cookies de seguimiento ni de publicidad.</li>
+        <li>No tiene instalado ningún servicio de analítica (Google Analytics u otro) al día de esta actualización.</li>
+        <li>No vende ni comparte datos con terceros.</li>
+        <li>No usa las imágenes de portfolio ni el contenido del blog para recolectar datos de quien navega.</li>
+      </ul>
+
+      <h2>Con quién comparto tus datos</h2>
+      <p>
+        Con nadie. Los datos del formulario de contacto llegan directo a mi email a través del propio servidor de hosting (HostGator) — no pasan por ningún servicio externo de terceros.
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        De acuerdo a la Ley N.º 18.331 de Protección de Datos Personales de Uruguay, tenés derecho a acceder, rectificar o solicitar la eliminación de los datos que me hayas enviado por el formulario de contacto. Para ejercer cualquiera de estos derechos, o por cualquier consulta sobre esta política, podés escribirme por <a href="https://wa.me/59898472684" target="_blank" rel="noopener">WhatsApp</a> o a través del <a href="/contacto/">formulario de contacto</a>.
+      </p>
+
+      <h2>Cambios a esta política</h2>
+      <p>
+        Si en el futuro este sitio incorpora analítica, cookies u otras herramientas que impliquen recolectar más datos, esta política se va a actualizar para reflejarlo antes de que ese cambio entre en funcionamiento.
+      </p>
+    </div>
+  </main>
+</Layout>

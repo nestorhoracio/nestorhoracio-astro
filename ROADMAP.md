@@ -2,16 +2,16 @@
 
 ## Estado actual (2026-08-17)
 
-**El sitio ya levanta y las 15 páginas se generan bien** (`npm run build` — verificado con capturas de Playwright en home, un post de blog, una página de portfolio, el hub del blog, dark mode y menú mobile; sin errores de consola). Lo que existe:
+**El sitio ya levanta y las 17 páginas se generan bien** (`npm run build` — verificado con capturas de Playwright en home, un post de blog, una página de portfolio, el hub del blog, contacto, política de privacidad, dark mode y menú mobile; sin errores de consola). Lo que existe:
 
 - Scaffold de Astro (`package.json`, `astro.config.mjs`, `tsconfig.json`) — mismo patrón minimalista que jesuseselcamino-astro, sin starter template de por medio.
 - `src/content.config.ts` con dos collections: `blog` (8 posts) y `portfolio` (5 proyectos).
 - `scripts/fetch-wp-content.mjs` — extrae los posts del blog desde la REST API y limpia el contenido de Divi (ver CLAUDE.md, sección Gotchas).
-- Diseño portado: `src/styles/global.css` (tokens), `header.css`, `footer.css`, `home.css`, `blog.css`. Fuente Blinker self-hosted, logos reales en `public/images/logo/`.
+- Diseño portado: `src/styles/global.css` (tokens), `header.css`, `footer.css`, `home.css`, `blog.css`, `contact.css`. Fuente Blinker self-hosted, logos reales en `public/images/logo/`.
 - `Layout.astro`, `Header.astro` (dark mode con swap de logo + scroll-spy + menú mobile, todo funcional) y `Footer.astro`.
-- Páginas: `index.astro` (home one-pager, con contenido real transcripto del sitio en vivo), `blog/index.astro` (hub), `[slug].astro` (plantilla plana compartida por posts de blog y proyectos de portfolio, mismo patrón que jesuseselcamino-astro).
+- Páginas: `index.astro` (home one-pager, con contenido real transcripto del sitio en vivo), `blog/index.astro` (hub), `[slug].astro` (plantilla plana compartida por posts de blog y proyectos de portfolio), `contacto/index.astro` + `public/contact.php` (formulario funcional, ver CLAUDE.md), `politica-de-privacidad/index.astro` (redactada de cero, ver CLAUDE.md).
 
-Lo que **no** existe todavía: Política de Privacidad (la página real está vacía en WordPress, hay que escribirla de cero — no se inventó texto legal sin que el usuario lo revise), SEO real (JSON-LD, sitemap probado, og:image por página), formulario de contacto, `.htaccess`, y todo lo de deploy (repo en GitHub, GitHub Actions, cuenta FTP).
+Lo que **no** existe todavía: SEO real (JSON-LD, `robots.txt`, favicon en más tamaños), `.htaccess`, y todo lo de deploy (repo en GitHub, GitHub Actions, cuenta FTP) — **deploy queda para el final a pedido del usuario**, que quiere verlo bien terminado antes de subirlo.
 
 ## Decisiones tomadas en la sesión de arranque (2026-08-17)
 
@@ -21,19 +21,29 @@ Lo que **no** existe todavía: Política de Privacidad (la página real está va
 - **Blog a futuro**: sin CMS, sin panel de edición. Publicar = agregar un `.md` a `src/content/blog/` + build + deploy. Decisión explícita del usuario, revisar si en algún momento pide agregar Decap CMS u otra cosa.
 - **URLs/redirects/404 en Apache**: pendiente de armar `.htaccess` (no hay `_redirects`/`_headers` como en Cloudflare).
 - **SSL**: pendiente confirmar que AutoSSL de cPanel esté activo para el dominio.
+- **Orden de trabajo** (agregado 2026-08-17, sesión 2): el deploy se hace al final, cuando el usuario dé el OK — prioridad es dejar el sitio completo primero.
 
 ## Próximo (en orden sugerido)
 
-1. **Política de Privacidad**: pendiente que el usuario defina qué debe cubrir (datos de contacto, analytics, cookies) — no inventar el texto legal.
+**Deploy pospuesto a propósito** — decisión del usuario (2026-08-17, sesión 2): quiere ver el sitio bien terminado antes de subirlo a HostGator. No arrancar el repo en GitHub / GitHub Actions / cuenta FTP hasta que lo pida.
+
+1. **Antes de subir en algún momento**: completar `$destinatario` en `public/contact.php` con el email real (hoy es un placeholder, ver CLAUDE.md) y que el usuario revise el texto de `politica-de-privacidad/index.astro` (lo redacté yo, es un borrador razonable pero no asesoramiento legal).
 2. **SEO**: componente `<SEO />` propio (ya hay `title`/`description`/`og:*`/canonical básicos en `Layout.astro`, falta JSON-LD, `robots.txt`, verificar `sitemap-index.xml` generado por `@astrojs/sitemap`, favicon real en más tamaños).
 3. Revisar a mano el bug de listas `<ol>`/`<ul>` anidadas duplicadas que traen 3 posts del blog desde WordPress (ver CLAUDE.md) — no es un error de la migración, viene así del contenido original.
 4. Placeholder de portada para los 3 posts sin imagen (`salto-de-ancla`, `ia-asistente-profesional`, `cpt-vs-modulos-manuales`) — hoy es un rectángulo de color liso en `blog/index.astro`, se puede mejorar.
-5. Formulario de contacto (PHP propio en HostGator) + `.htaccess` (trailing slash / 404 real de Apache, hoy el 404 de Astro no está armado).
-6. Repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel.
-7. Dominio: confirmar que nestorhoracio.com ya apunta a este mismo hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) y que SSL está activo.
-8. Revisión visual pasada a mano contra el sitio real — el layout/colores/tipografía están portados fielmente pero no pixel-perfect (por ejemplo el nav desktop es una aproximación de la píldora original, no viene de un archivo fuente).
+5. `.htaccess` (trailing slash / 404 real de Apache, hoy el 404 de Astro no está armado).
+6. Revisión visual pasada a mano contra el sitio real — el layout/colores/tipografía están portados fielmente pero no pixel-perfect (por ejemplo el nav desktop es una aproximación de la píldora original, no viene de un archivo fuente).
+7. **Cuando el usuario pida arrancar el deploy**: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo.
 
 ## Changelog
+
+### 2026-08-17 (sesión 2) — Commit inicial + formulario de contacto + Política de Privacidad
+- Primer commit del repo (todo lo de la sesión 1: scaffold, contenido, diseño, home/blog/portfolio).
+- El usuario revisó el sitio corriendo local y le pareció "más lindo que el original". Pidió mover el deploy al final (quiere verlo terminado antes de subirlo) y seguir con formulario de contacto + Política de Privacidad.
+- `public/contact.php`: honeypot, validación server-side, sanitización anti header-injection, `mail()` nativo (sin dependencias). `$destinatario` queda como placeholder a propósito — no se asumió el email del usuario sin confirmar que sea el correcto para recibir mensajes del formulario.
+- `src/pages/contacto/index.astro`: formulario + feedback de éxito/error vía query param (sin JS de fetch, POST normal a `/contact.php`). Agregado "Contacto" al nav del Header.
+- `src/pages/politica-de-privacidad/index.astro`: redactada de cero (la real está vacía en WordPress) — refleja solo lo que el sitio hace de verdad (formulario por email, `localStorage` para dark mode, sin cookies/analítica), cita Ley N.º 18.331 (Uruguay). Linkeada desde el footer.
+- `npm run build`: 17 páginas, sin errores. Verificado visualmente con Playwright: contacto (vacío y en estado `?ok=1`) y política de privacidad.
 
 ### 2026-08-17 — Arranque del proyecto
 - Relevado jesuseselcamino-astro como referencia de patrón (Content Collections, script de fetch vía REST API, CLAUDE.md/ROADMAP.md).

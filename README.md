@@ -15,7 +15,7 @@ Migración de **nestorhoracio.com** (portfolio/sitio profesional de desarrollo w
 
 ## Estado del proyecto
 
-**El sitio ya build-ea y las 15 páginas se ven bien**: home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts y 5 páginas de proyecto de portfolio, con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile). Falta: Política de Privacidad (vacía en el sitio real, hay que escribirla), SEO completo, formulario de contacto, y todo el deploy (repo en GitHub, GitHub Actions, `.htaccess`). Detalle completo en [ROADMAP.md](./ROADMAP.md).
+**El sitio ya build-ea y las 17 páginas se ven bien**: home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 5 páginas de proyecto de portfolio, contacto (formulario funcional vía `contact.php`) y Política de Privacidad — todo con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile). Falta: SEO completo, `.htaccess`, y todo el deploy — **pospuesto a pedido del usuario** hasta que el sitio esté terminado. Detalle completo en [ROADMAP.md](./ROADMAP.md).
 
 ## Instalación y desarrollo local
 
@@ -40,20 +40,23 @@ nestorhoracio-astro/
 │   └── fetch-wp-content.mjs   # extrae el blog desde la REST API de WP + limpia shortcodes de Divi
 ├── public/
 │   ├── fonts/             # Blinker self-hosted (400/600)
-│   └── images/logo/       # isotipo real (claro/oscuro)
+│   ├── images/logo/       # isotipo real (claro/oscuro)
+│   └── contact.php        # procesa el formulario de /contacto/ (único código server-side)
 └── src/
     ├── content.config.ts  # collections: blog, portfolio
     ├── content/
     │   ├── blog/          # .md + portada por post
     │   └── portfolio/     # .md + captura por proyecto (5 proyectos reales)
-    ├── styles/            # global.css (tokens), header.css, footer.css, home.css, blog.css
+    ├── styles/            # global.css (tokens), header.css, footer.css, home.css, blog.css, contact.css
     ├── layouts/
     │   └── Layout.astro
     ├── components/
     │   ├── Header.astro   # dark mode + scroll-spy + menú mobile
     │   └── Footer.astro
     └── pages/
-        ├── index.astro        # home one-pager (hero + #portfolio + #diseno-web + #sobre-mi)
-        ├── blog/index.astro   # hub del blog
-        └── [slug].astro       # plantilla plana para posts de blog Y proyectos de portfolio
+        ├── index.astro                    # home one-pager (hero + #portfolio + #diseno-web + #sobre-mi)
+        ├── blog/index.astro               # hub del blog
+        ├── [slug].astro                   # plantilla plana para posts de blog Y proyectos de portfolio
+        ├── contacto/index.astro           # formulario (POST a /contact.php)
+        └── politica-de-privacidad/index.astro
 ```

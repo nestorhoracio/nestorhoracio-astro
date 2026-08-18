@@ -1,0 +1,55 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/contact.css";
+---
+
+<Layout
+  title="Contacto — Néstor Horacio Díaz"
+  description="Escribime sobre tu proyecto y te respondo a la brevedad."
+>
+  <main class="contact-page">
+    <h1>Contacto</h1>
+    <p class="contact-page__lead">Contame sobre tu negocio y tu proyecto — respondo en el día hábil.</p>
+
+    <div id="contactFeedbackOk" class="contact-feedback contact-feedback--ok" role="status">
+      ¡Gracias! Recibí tu mensaje y te voy a responder pronto.
+    </div>
+    <div id="contactFeedbackError" class="contact-feedback contact-feedback--error" role="alert">
+      Hubo un problema al enviar el mensaje. Probá de nuevo o escribime por
+      <a href="https://wa.me/59898472684" target="_blank" rel="noopener">WhatsApp</a>.
+    </div>
+
+    <form class="contact-form" action="/contact.php" method="POST">
+      <div class="contact-form__hp" aria-hidden="true">
+        <label for="website">No completar este campo</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required />
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <div>
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" required></textarea>
+      </div>
+
+      <button type="submit" class="btn">Enviar mensaje</button>
+    </form>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    if (params.get("ok")) {
+      document.getElementById("contactFeedbackOk")?.classList.add("is-visible");
+    } else if (params.get("error")) {
+      document.getElementById("contactFeedbackError")?.classList.add("is-visible");
+    }
+  </script>
+</Layout>
