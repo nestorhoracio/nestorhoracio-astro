@@ -30,8 +30,44 @@
 
 .hero p {
   max-width: 600px;
-  margin: 0 auto;
+  margin: 0 auto 2rem;
   color: var(--texto-suave);
+}
+
+.hero__cta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 3rem;
+}
+
+.hero__stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.hero__stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero__stats strong {
+  font-family: 'Blinker', sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: var(--titulares);
+  line-height: 1.1;
+}
+
+.hero__stats span {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  max-width: 140px;
+  text-align: center;
 }
 
 .section > .section__inner > h2 {

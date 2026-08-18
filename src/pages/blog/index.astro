@@ -22,7 +22,9 @@ const formatDate = (date: Date) =>
             {post.data.cover ? (
               <Image src={post.data.cover} alt="" width={480} height={220} />
             ) : (
-              <div style="height:220px;background-color:var(--color-primario);" />
+              <div class="post-card__placeholder">
+                <img src="/images/logo/isotipo-full-color.png" alt="" width="64" height="64" />
+              </div>
             )}
           </a>
           <div class="post-card__body">

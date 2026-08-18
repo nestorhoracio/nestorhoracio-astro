@@ -37,6 +37,14 @@ Lo que **no** existe todavía: SEO real (JSON-LD, `robots.txt`, favicon en más 
 
 ## Changelog
 
+### 2026-08-17 (sesión 4) — Mejoras de conversión/UX pedidas por el usuario
+El usuario revisó el sitio y pidió mi opinión sobre qué mejorar antes de seguir con lo técnico. Propuse 4 puntos, dio el visto bueno para los 4:
+- **CTA en el hero**: agregado botón "Hablemos por WhatsApp" (link real, mismo número que el footer: `wa.me/59898472684`) + botón secundario "Ver mi trabajo" (ancla a `#portfolio`). Nueva clase `.btn--outline` en `global.css`.
+- **Prueba social**: agregada una fila de 3 stats bajo el CTA del hero (6 proyectos reales / 2 stacks / 100% código a medida). Deliberadamente **no** se agregaron testimonios ni citas de clientes — no hay testimonios reales disponibles y no correspondía inventarlos; los stats elegidos son datos verificables desde el propio sitio.
+- **Placeholder de portada del blog**: los 3 posts sin imagen ahora muestran el isotipo de marca centrado sobre un degradé (en vez del rectángulo de color liso anterior). Clase `.post-card__placeholder` en `blog.css`.
+- **Nav apretado en 800-1000px**: se revisó con capturas en 800/850/900/1000px — en realidad encaja bien en todo ese rango, no hacía falta ningún cambio (se descarta como falso positivo).
+- `npm run build`: sigue en 18 páginas, sin errores. Verificado visualmente en claro y oscuro, sin errores de consola.
+
 ### 2026-08-17 (sesión 3) — Nuevo proyecto de portfolio: Atalaias Rou
 - El usuario pidió agregar un 6to proyecto que no está en el sitio original: **Atalaias Rou** (`f:/proyecto astro abril 2026/atalaias-rou`), sitio de un ministerio evangélico (Atalaias Rou / IMTF Uruguay y Brasil) con portal de 20 radios en vivo + subsitios institucionales UY/BR. Deploy temporal en `https://atalaiasrou.netlify.app/` hasta pasar al dominio definitivo.
 - Descripción y stack sacados del README.md real del proyecto (no inventados). Captura de portada tomada en vivo del deploy de Netlify con Playwright (con autorización explícita del usuario para sacar captura y descripción).
