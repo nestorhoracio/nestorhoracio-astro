@@ -25,13 +25,19 @@
 
 ## Próximo (en orden sugerido)
 
-El usuario dio el OK para arrancar el deploy (sesión 11). Ya están hechos: repo en GitHub (`nestorhoracio/nestorhoracio-astro`, público, rama `main`) y el workflow de GitHub Actions (`.github/workflows/deploy.yml`, build + FTPS con `SamKirkland/FTP-Deploy-Action`). **Falta, del lado del usuario en cPanel/GitHub (no lo puede hacer Claude — son credenciales)**:
+El usuario dio el OK para arrancar el deploy (sesión 11). Ya están hechos: repo en GitHub (`nestorhoracio/nestorhoracio-astro`, público, rama `main`) y el workflow de GitHub Actions (`.github/workflows/deploy.yml`, build + FTPS con `SamKirkland/FTP-Deploy-Action`).
 
-1. Crear una cuenta FTP **dedicada** en cPanel de HostGator (no la cuenta principal), con acceso limitado al directorio de destino (`public_html/` si el dominio es el principal de la cuenta, u otra ruta si es addon domain).
-2. Cargar 3 secrets en GitHub → Settings → Secrets and variables → Actions → *Secrets*: `FTP_SERVER` (host, ej. `ftp.nestorhoracio.com`), `FTP_USERNAME`, `FTP_PASSWORD`. Opcional, en la pestaña *Variables*: `FTP_SERVER_DIR` si el directorio no es `./public_html/` (ese es el default si no se define).
-3. Confirmar que `nestorhoracio.com` ya apunta a HostGator (si el WordPress actual vive en otro proveedor, planear el corte de DNS) y que AutoSSL de cPanel está activo para el dominio.
-4. Primer deploy: push a `main` (o `workflow_dispatch` manual desde la pestaña Actions) — revisar el log del Action y probar el sitio real.
-5. Una vez deployado, probar contra el hosting real que las reglas de `.htaccess` funcionan (`mod_rewrite`/`mod_expires`/`mod_headers`), incluidos los headers de seguridad (ver changelog sesión 7) — esto no se puede probar en local, el dev server de Astro no interpreta `.htaccess`.
+**Confirmado por el usuario (sesión 11): el WordPress actual y la cuenta de HostGator contratada para Astro son la MISMA cuenta** — no hay hosting viejo aparte, no hay corte de DNS que planear (el dominio ya apunta ahí). Esto simplifica el DNS pero complica el orden del deploy: `public_html/` de esa cuenta tiene WordPress **en vivo** ahora mismo, y es el mismo directorio al que el workflow sube `dist/`. Si se pisan, rompe (choque `index.php` de WP vs `index.html` de Astro, `.htaccess` de permalinks de WP vs el nuestro). Por eso WordPress tiene que salir de `public_html/` **antes** del primer deploy real, no después. Plan acordado con el usuario:
+
+1. **Backup completo de WordPress ya, antes de cualquier otra cosa**: archivos (`public_html/` completo, vía File Manager "Compress" + descarga, o FTP) + export SQL de la base desde phpMyAdmin. Guardarlo fuera de HostGator (disco local o nube). No negociable aunque no se vaya a reusar nada — red de seguridad por si algo no se migró a Astro.
+2. Crear una cuenta FTP **dedicada** en cPanel (no la principal), con acceso limitado a `public_html/`. Cargar 3 secrets en GitHub → Settings → Secrets and variables → Actions → *Secrets*: `FTP_SERVER` (ej. `ftp.nestorhoracio.com`), `FTP_USERNAME`, `FTP_PASSWORD`. (Variable opcional `FTP_SERVER_DIR` si el destino no es `./public_html/`, que es el default.) Esto no depende del paso 1, se puede hacer en paralelo.
+3. Confirmar que AutoSSL de cPanel está activo para el dominio (simple en este caso, ya que no hay DNS que mover).
+4. **El día del corte**: mover (no borrar) el contenido actual de `public_html/` a una carpeta hermana tipo `public_html_wordpress_backup/`, dejando `public_html/` vacía. Downtime corto pero reversible (si algo sale mal, se mueve todo de vuelta).
+5. Recién ahí, primer deploy real: push a `main` (o `workflow_dispatch` manual desde la pestaña Actions).
+6. Verificar el sitio en producción: todas las páginas, el formulario de contacto con un envío real, dark mode, 404, y `curl -I` para confirmar que los headers de `.htaccess` (CSP, HSTS, etc., ver changelog sesión 7) están activos — no se puede probar en local, el dev server de Astro no interpreta `.htaccess`.
+7. Dejar pasar unos días con el sitio nuevo estable antes del paso final.
+8. Borrado definitivo de WordPress: la carpeta `public_html_wordpress_backup/`, la base de datos y su usuario de MySQL, y desinstalar la app desde Softaculous/Installatron en cPanel si se instaló por ahí (para que cPanel no la siga listando).
+9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
 
@@ -40,7 +46,7 @@ El usuario dio el OK para empezar el deploy (pospuesto desde la sesión 2). Hech
 - Rama local renombrada `master` → `main` (convención de GitHub).
 - Repo creado con `gh repo create` (público, a pedido del usuario — sirve como caso de estudio: "así migré mi propio sitio a Astro") y pusheado: `https://github.com/nestorhoracio/nestorhoracio-astro`.
 - `.github/workflows/deploy.yml`: build (Node 22, `npm ci` + `npm run build`) y deploy del contenido de `dist/` por **FTPS** con `SamKirkland/FTP-Deploy-Action@v4.3.5`, disparado en push a `main` (+ `workflow_dispatch` manual). `dangerous-clean-slate` se deja en `false` a propósito — el directorio remoto de cPanel tiene carpetas propias (`cgi-bin`, `.well-known`, etc.) que no vienen de este repo y no hay que borrar. Lee host/usuario/contraseña de GitHub Secrets (`FTP_SERVER`/`FTP_USERNAME`/`FTP_PASSWORD`, todavía no cargados — son credenciales, no las genera Claude) y el directorio remoto de una Variable opcional (`FTP_SERVER_DIR`, default `./public_html/`).
-- Quedan 5 pasos manuales del lado del usuario antes de que el primer deploy funcione — ver "Próximo" arriba.
+- El usuario confirmó que WordPress y el hosting de HostGator contratado para Astro son la **misma cuenta** (no hay hosting viejo aparte). Esto descarta el escenario "corte de DNS" que manejaba el ROADMAP hasta ahora, pero implica que WordPress vive hoy en el mismo `public_html/` al que va a subir el workflow — hay que sacarlo de ahí **antes** del primer deploy real (backup → mover WP fuera de `public_html/` → recién ahí deployar), no después. Plan completo con los 9 pasos (backup, cuenta FTP, SSL, corte, deploy, verificación, espera, borrado definitivo, nota sobre `fetch:wp`) documentado en "Próximo" arriba.
 
 ### 2026-08-18 (sesión 10) — Imagen OG de marca (último pendiente antes del deploy)
 El usuario pidió resolver la imagen OG para dejar todo listo antes de subir el sitio en otra sesión. Generada con Playwright, no diseñada a mano en un editor:
