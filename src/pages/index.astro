@@ -73,10 +73,10 @@ const about = [
           {portfolio.map((project) => (
             <article class="portfolio-card">
               <a href={`/${project.id}/`}>
-                <Image src={project.data.cover} alt="" width={480} height={220} />
+                <Image src={project.data.cover} alt={project.data.title} width={480} height={220} />
               </a>
               <div class="portfolio-card__body">
-                <h4><a href={`/${project.id}/`}>{project.data.title}</a></h4>
+                <h3><a href={`/${project.id}/`}>{project.data.title}</a></h3>
                 <p>{project.data.summary}</p>
               </div>
             </article>
@@ -91,7 +91,7 @@ const about = [
         <div class="services-grid">
           {services.map((service) => (
             <div class="service-item">
-              <h4>{service.title}</h4>
+              <h3>{service.title}</h3>
               <p>{service.text}</p>
             </div>
           ))}
@@ -112,7 +112,7 @@ const about = [
         <div class="about-grid">
           {about.map((item) => (
             <div>
-              <h4>{item.title}</h4>
+              <h3>{item.title}</h3>
               <p>{item.text}</p>
             </div>
           ))}

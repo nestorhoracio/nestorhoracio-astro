@@ -14,7 +14,7 @@ const links = [
 <header class="nh-header" id="nhHeader">
   <div class="nh-header__inner">
     <a href="/" class="nh-header__logo" aria-label="Néstor Horacio Díaz — inicio">
-      <img id="nhLogo" src="/images/logo/isotipo-full-color.png" alt="Néstor Horacio Díaz" width="44" height="44" />
+      <img id="nhLogo" src="/images/logo/isotipo-full-color-sm.png" alt="Néstor Horacio Díaz" width="44" height="44" />
     </a>
 
     <nav class="nh-nav" aria-label="Principal">
@@ -67,8 +67,8 @@ const links = [
   const logoImage = document.getElementById("nhLogo") as HTMLImageElement | null;
   const toggle = document.getElementById("darkModeToggle");
 
-  const lightLogoSrc = "/images/logo/isotipo-full-color.png";
-  const darkLogoSrc = "/images/logo/isotipo-black.png";
+  const lightLogoSrc = "/images/logo/isotipo-full-color-sm.png";
+  const darkLogoSrc = "/images/logo/isotipo-black-sm.png";
 
   const applyDarkMode = (enable: boolean) => {
     if (logoImage) {

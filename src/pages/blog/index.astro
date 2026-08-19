@@ -20,10 +20,10 @@ const formatDate = (date: Date) =>
         <article class="post-card">
           <a href={`/${post.id}/`}>
             {post.data.cover ? (
-              <Image src={post.data.cover} alt="" width={480} height={220} />
+              <Image src={post.data.cover} alt={post.data.title} width={480} height={220} />
             ) : (
               <div class="post-card__placeholder">
-                <img src="/images/logo/isotipo-full-color.png" alt="" width="64" height="64" />
+                <img src="/images/logo/isotipo-full-color-sm.png" alt={post.data.title} width="64" height="64" />
               </div>
             )}
           </a>

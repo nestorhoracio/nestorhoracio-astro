@@ -129,11 +129,12 @@
   flex-direction: column;
 }
 
-.portfolio-card h4 {
+.portfolio-card h3 {
+  font-size: 1.4rem;
   margin-bottom: 0.5rem;
 }
 
-.portfolio-card h4 a {
+.portfolio-card h3 a {
   color: var(--titulares);
 }
 
@@ -157,7 +158,8 @@
   }
 }
 
-.service-item h4 {
+.service-item h3 {
+  font-size: 1.4rem;
   margin-bottom: 0.4rem;
 }
 
@@ -190,7 +192,8 @@
   }
 }
 
-.about-grid h4 {
+.about-grid h3 {
+  font-size: 1.4rem;
   margin-bottom: 0.4rem;
 }
 
