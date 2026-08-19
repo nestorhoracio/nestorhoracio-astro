@@ -16,7 +16,7 @@ Migración de **nestorhoracio.com** (portfolio/sitio profesional de desarrollo w
 
 ## Estado del proyecto
 
-**El sitio está terminado** (el usuario ya dio el visto bueno y aprobó la Política de Privacidad): 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`, con el email real ya configurado), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, imagen OG de marca propia), seguridad (headers HTTP endurecidos, throttle en el formulario) y `.htaccess` para Apache. Lo único que falta es el deploy — **pospuesto a pedido del usuario**, que quiere subirlo en otra sesión. Detalle completo en [ROADMAP.md](./ROADMAP.md).
+**El sitio está terminado** (el usuario ya dio el visto bueno y aprobó la Política de Privacidad): 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`, con el email real ya configurado), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, imagen OG de marca propia), seguridad (headers HTTP endurecidos, throttle en el formulario) y `.htaccess` para Apache. El deploy ya arrancó: repo en GitHub ([nestorhoracio/nestorhoracio-astro](https://github.com/nestorhoracio/nestorhoracio-astro)) y workflow de GitHub Actions (build + FTPS a HostGator) listos; falta que el usuario cree la cuenta FTP dedicada en cPanel y cargue los secrets. Detalle completo en [ROADMAP.md](./ROADMAP.md).
 
 ## Instalación y desarrollo local
 
@@ -37,6 +37,9 @@ nestorhoracio-astro/
 ├── README.md              # este archivo
 ├── astro.config.mjs
 ├── tsconfig.json
+├── .github/
+│   └── workflows/
+│       └── deploy.yml     # build + deploy por FTPS a HostGator (push a main)
 ├── scripts/
 │   └── fetch-wp-content.mjs   # extrae el blog desde la REST API de WP + limpia shortcodes de Divi
 ├── public/

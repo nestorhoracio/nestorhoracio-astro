@@ -1,6 +1,6 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-08-18)
+## Estado actual (2026-08-19)
 
 **El sitio ya levanta y las 19 páginas se generan bien** (`npm run build` — verificado con capturas y scripts de Playwright en home, blog, portfolio, contacto, política de privacidad, 404, dark mode y menú mobile; sin errores de consola en ninguna ruta). Lo que existe:
 
@@ -11,7 +11,7 @@
 - `Layout.astro`, `Header.astro` (dark mode con swap de logo + scroll-spy + menú mobile, todo funcional) y `Footer.astro`.
 - Páginas: `index.astro` (home one-pager, con contenido real transcripto del sitio en vivo), `blog/index.astro` (hub), `[slug].astro` (plantilla plana compartida por posts de blog y proyectos de portfolio), `contacto/index.astro` + `public/contact.php` (formulario funcional, ver CLAUDE.md), `politica-de-privacidad/index.astro` (redactada de cero, ver CLAUDE.md).
 
-**SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). **Seguridad ya tiene headers HTTP endurecidos** (CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy en `.htaccess`) y throttle básico en el formulario de contacto (ver changelog sesión 7). **`contact.php` ya tiene el email real** (`nesthora@gmail.com`) y **las 3 imágenes de `95-en-pagespeed-movil.md` ya están locales** (`public/images/blog/`, no dependen más del WordPress real, ver changelog sesión 8). **El usuario ya revisó y aprobó el texto de la Política de Privacidad** (ver changelog sesión 9) — sigue sin ser asesoramiento legal formal, pero ya no es un borrador pendiente de aprobación. **Ya existe una imagen OG de marca real** (`public/images/og/og-default.png`, 1200×630, ver changelog sesión 10) — el sitio está completo en todo lo que no es deploy. Lo único que **no** existe todavía es el deploy en sí (repo en GitHub, GitHub Actions, cuenta FTP) — **queda para el final a pedido del usuario**, que quiere verlo bien terminado antes de subirlo. El usuario ya dio el visto bueno a la parte visual/UX ("para mi visión ya estaría pronto").
+**SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). **Seguridad ya tiene headers HTTP endurecidos** (CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy en `.htaccess`) y throttle básico en el formulario de contacto (ver changelog sesión 7). **`contact.php` ya tiene el email real** (`nesthora@gmail.com`) y **las 3 imágenes de `95-en-pagespeed-movil.md` ya están locales** (`public/images/blog/`, no dependen más del WordPress real, ver changelog sesión 8). **El usuario ya revisó y aprobó el texto de la Política de Privacidad** (ver changelog sesión 9) — sigue sin ser asesoramiento legal formal, pero ya no es un borrador pendiente de aprobación. **Ya existe una imagen OG de marca real** (`public/images/og/og-default.png`, 1200×630, ver changelog sesión 10) — el sitio está completo en todo lo que no es deploy. El usuario ya dio el visto bueno a la parte visual/UX ("para mi visión ya estaría pronto") y en la sesión 11 dio el OK para arrancar el deploy: **ya existe el repo en GitHub** (`nestorhoracio/nestorhoracio-astro`, público, rama `main`) **y el workflow de GitHub Actions** (`.github/workflows/deploy.yml`, build + FTPS a HostGator). Falta la parte que solo puede hacer el usuario porque son credenciales: cuenta FTP dedicada en cPanel + cargar los secrets en GitHub — ver "Próximo" abajo.
 
 ## Decisiones tomadas en la sesión de arranque (2026-08-17)
 
@@ -25,9 +25,22 @@
 
 ## Próximo (en orden sugerido)
 
-**Todo lo que no es deploy está terminado.** Lo único que queda es, cuando el usuario lo pida: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo + probar en el hosting real que las reglas de `.htaccess` funcionan (`mod_rewrite`/`mod_expires`/`mod_headers`), incluidos los headers de seguridad (ver changelog sesión 7). Pospuesto a propósito desde la sesión 2 — el usuario quiere ver el sitio bien terminado antes de subirlo. No arrancar el repo en GitHub / GitHub Actions / cuenta FTP hasta que lo pida.
+El usuario dio el OK para arrancar el deploy (sesión 11). Ya están hechos: repo en GitHub (`nestorhoracio/nestorhoracio-astro`, público, rama `main`) y el workflow de GitHub Actions (`.github/workflows/deploy.yml`, build + FTPS con `SamKirkland/FTP-Deploy-Action`). **Falta, del lado del usuario en cPanel/GitHub (no lo puede hacer Claude — son credenciales)**:
+
+1. Crear una cuenta FTP **dedicada** en cPanel de HostGator (no la cuenta principal), con acceso limitado al directorio de destino (`public_html/` si el dominio es el principal de la cuenta, u otra ruta si es addon domain).
+2. Cargar 3 secrets en GitHub → Settings → Secrets and variables → Actions → *Secrets*: `FTP_SERVER` (host, ej. `ftp.nestorhoracio.com`), `FTP_USERNAME`, `FTP_PASSWORD`. Opcional, en la pestaña *Variables*: `FTP_SERVER_DIR` si el directorio no es `./public_html/` (ese es el default si no se define).
+3. Confirmar que `nestorhoracio.com` ya apunta a HostGator (si el WordPress actual vive en otro proveedor, planear el corte de DNS) y que AutoSSL de cPanel está activo para el dominio.
+4. Primer deploy: push a `main` (o `workflow_dispatch` manual desde la pestaña Actions) — revisar el log del Action y probar el sitio real.
+5. Una vez deployado, probar contra el hosting real que las reglas de `.htaccess` funcionan (`mod_rewrite`/`mod_expires`/`mod_headers`), incluidos los headers de seguridad (ver changelog sesión 7) — esto no se puede probar en local, el dev server de Astro no interpreta `.htaccess`.
 
 ## Changelog
+
+### 2026-08-19 (sesión 11) — Arranca el deploy: repo GitHub + workflow de Actions
+El usuario dio el OK para empezar el deploy (pospuesto desde la sesión 2). Hecho lo que no requiere credenciales de HostGator:
+- Rama local renombrada `master` → `main` (convención de GitHub).
+- Repo creado con `gh repo create` (público, a pedido del usuario — sirve como caso de estudio: "así migré mi propio sitio a Astro") y pusheado: `https://github.com/nestorhoracio/nestorhoracio-astro`.
+- `.github/workflows/deploy.yml`: build (Node 22, `npm ci` + `npm run build`) y deploy del contenido de `dist/` por **FTPS** con `SamKirkland/FTP-Deploy-Action@v4.3.5`, disparado en push a `main` (+ `workflow_dispatch` manual). `dangerous-clean-slate` se deja en `false` a propósito — el directorio remoto de cPanel tiene carpetas propias (`cgi-bin`, `.well-known`, etc.) que no vienen de este repo y no hay que borrar. Lee host/usuario/contraseña de GitHub Secrets (`FTP_SERVER`/`FTP_USERNAME`/`FTP_PASSWORD`, todavía no cargados — son credenciales, no las genera Claude) y el directorio remoto de una Variable opcional (`FTP_SERVER_DIR`, default `./public_html/`).
+- Quedan 5 pasos manuales del lado del usuario antes de que el primer deploy funcione — ver "Próximo" arriba.
 
 ### 2026-08-18 (sesión 10) — Imagen OG de marca (último pendiente antes del deploy)
 El usuario pidió resolver la imagen OG para dejar todo listo antes de subir el sitio en otra sesión. Generada con Playwright, no diseñada a mano en un editor:
