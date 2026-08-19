@@ -66,7 +66,7 @@ Relevado el 2026-08-17 a partir de capturas de pantalla (desktop + mobile devtoo
 ## Formulario de contacto y Política de Privacidad
 
 - `public/contact.php` — el único código server-side del sitio. Astro copia todo `public/` tal cual a `dist/`, así que esto viaja con el build y HostGator lo ejecuta directo (no pasa por Astro/Node en ningún momento). Recibe el POST de `/contacto/`, valida (honeypot + campos requeridos + `filter_var` email), sanitiza contra header injection, y manda el mail con `mail()` nativo de PHP — sin librería ni dependencia externa. Redirige de vuelta a `/contacto/?ok=1` o `?error=...`, y la página Astro (`src/pages/contacto/index.astro`) lee ese query param con un `<script>` inline para mostrar el mensaje — no hace falta JS de fetch/AJAX, funciona con un POST normal.
-- **`$destinatario` en `contact.php` es un placeholder** (`PON-TU-EMAIL-AQUI@nestorhoracio.com`) — hay que completarlo con el email real antes de subir a HostGator. No se asumió `nesthora@gmail.com` (el email del usuario en este entorno) porque no está confirmado que sea la casilla que debe recibir los mensajes del formulario del sitio.
+- **`$destinatario` en `contact.php` ya tiene el email real** (`nesthora@gmail.com`, confirmado por el usuario — ver ROADMAP.md sesión 8). Ya no es un placeholder.
 - Política de Privacidad (`src/pages/politica-de-privacidad/index.astro`): redactada de cero por Claude a pedido explícito del usuario (la del sitio real estaba vacía, ver arriba). Refleja únicamente lo que el sitio realmente hace hoy — formulario de contacto vía email, preferencia de dark mode en `localStorage`, sin cookies/analítica/terceros — y cita la Ley N.º 18.331 de Uruguay. El usuario la leyó y la aprobó el 2026-08-18 (ver ROADMAP.md, sesión 9). **Sigue sin ser asesoramiento legal formal** — si en algún momento se agrega Analytics, un CMS, o cualquier otra recolección de datos, esta página hay que actualizarla (y probablemente pedir otra revisión).
 
 ## SEO
@@ -77,12 +77,20 @@ Relevado el 2026-08-17 a partir de capturas de pantalla (desktop + mobile devtoo
 
 ## `.htaccess` (Apache / HostGator)
 
-`public/.htaccess` es el único punto de configuración de servidor de todo el sitio (se copia tal cual a `dist/.htaccess` — confirmado que Astro SÍ copia archivos que empiezan con punto). Hace: forzar HTTPS, forzar `nestorhoracio.com` sin `www` (coherente con `site` en `astro.config.mjs`), agregar `/` final cuando falta (coherente con `trailingSlash: 'always'`), `ErrorDocument 404 /404.html`, cache largo para assets con hash en `/_astro/`. **No probado contra el HostGator real todavía** — recién se puede confirmar que las reglas de `mod_rewrite`/`mod_expires`/`mod_headers` funcionan como se espera una vez deployado (los módulos deberían estar disponibles en cualquier hosting compartido estándar, pero no está de más revisarlo).
+`public/.htaccess` es el único punto de configuración de servidor de todo el sitio (se copia tal cual a `dist/.htaccess` — confirmado que Astro SÍ copia archivos que empiezan con punto). Hace: forzar HTTPS, forzar `nestorhoracio.com` sin `www` (coherente con `site` en `astro.config.mjs`), agregar `/` final cuando falta (coherente con `trailingSlash: 'always'`), `ErrorDocument 404 /404.html`, cache largo para assets con hash en `/_astro/`. **Probado contra el HostGator real el 2026-08-19 (sesión 11, primer deploy) y funciona**: HTTPS forzado, redirect sin `www`, trailing slash, 404 real, y los headers de seguridad (`X-Frame-Options`, `HSTS`, `CSP`, `Permissions-Policy`) — todo confirmado con `curl -I` contra el dominio real.
+
+## Deploy real a HostGator — hallazgos del primer deploy (sesión 11, 2026-08-19)
+
+- **La cuenta FTP dedicada para el deploy (`deploy@nestorhoracio.com`) tiene su "Directorio" en cPanel apuntando a `public_html`** (así se armó a propósito, para no darle acceso a nada más de la cuenta). Esto significa que la **raíz FTP de esa cuenta YA ES `public_html`** — el `server-dir` del workflow (`.github/workflows/deploy.yml`) tiene que ser `./` (no `./public_html/`), si no se crea una subcarpeta `public_html/public_html/` de más y el sitio real queda vacío (pasó en el primer intento, causó un 403 real en producción hasta que se detectó y corrigió). Si en algún momento se recrea la cuenta FTP con un directorio distinto, hay que revisar este valor también.
+- **HostGator sirve el HTML/assets estáticos a través de una capa nginx delante de Apache** (headers `Server: nginx` + `X-Server-Cache`/`X-Proxy-Cache` en las respuestas de páginas), pero **el PHP (`contact.php`) lo sirve Apache directo** (`Server: Apache`, sin esos headers de caché). Útil para no confundirse si algo "no se actualiza" — puede ser esta capa de caché estática, no necesariamente el deploy.
+- **HostGator tiene una capa anti-bot que devuelve 409 con un `<script>` que setea una cookie y hace reload** (`document.cookie = "humans_XXXXX=1"; document.location.reload(true)`) ante requests que no parecen un navegador real (ej. `curl` sin cookies). Un navegador real la pasa sola, sin que el usuario note nada — **no es un bug de `contact.php`**, si en el futuro alguien prueba el form con `curl`/un script y ve un 409 con ese HTML, es esto, no el código.
+- El primer intento de deploy (antes del fix de `server-dir`) tuvo además un timeout de FTP a mitad de subida (`Error: Timeout (control socket)`, típico de FTPS en shared hosting con muchos archivos chicos) — se resolvió solo reintentando (`gh workflow run` de nuevo), no hizo falta ningún cambio. Si vuelve a pasar, reintentar antes de asumir que es un problema de configuración.
 
 ## No tocar sin avisar
 
 - El User-Agent del script de fetch (aunque nestorhoracio.com no lo necesite, por si en el futuro el sitio agrega Cloudflare/WAF).
 - El schema de `blog` en `src/content.config.ts`: `cover` es opcional a propósito (ver Gotchas).
+- `server-dir: './'` en `.github/workflows/deploy.yml` — ver "Deploy real a HostGator" arriba, no volver a poner `./public_html/`.
 
 ## Comandos útiles
 
