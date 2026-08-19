@@ -31,6 +31,11 @@ jobs:
       # dangerous-clean-slate se deja en false (default): el directorio remoto
       # tiene carpetas propias de cPanel (cgi-bin, .well-known para SSL, etc.)
       # que no vinieron de este repo y no hay que borrar.
+      #
+      # server-dir es './' (no './public_html/'): la cuenta FTP dedicada ya
+      # tiene su propio home apuntando a public_html/ en cPanel, así que la
+      # raíz FTP YA ES public_html -- poner './public_html/' acá crea una
+      # subcarpeta public_html/public_html/ de más (pasó en el primer deploy).
       - name: Deploy por FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -38,5 +43,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
-          server-dir: ${{ vars.FTP_SERVER_DIR || './public_html/' }}
+          server-dir: ${{ vars.FTP_SERVER_DIR || './' }}
           local-dir: ./dist/
