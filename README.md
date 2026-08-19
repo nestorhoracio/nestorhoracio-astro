@@ -16,7 +16,7 @@ Migración de **nestorhoracio.com** (portfolio/sitio profesional de desarrollo w
 
 ## Estado del proyecto
 
-**El sitio está terminado en lo visual/funcional** (el usuario ya dio el visto bueno): 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, og:image por página) y `.htaccess` para Apache. Falta: completar el email destinatario en `contact.php` y todo el deploy — **pospuesto a pedido del usuario**. Detalle completo en [ROADMAP.md](./ROADMAP.md).
+**El sitio está terminado** (el usuario ya dio el visto bueno y aprobó la Política de Privacidad): 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`, con el email real ya configurado), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, imagen OG de marca propia), seguridad (headers HTTP endurecidos, throttle en el formulario) y `.htaccess` para Apache. Lo único que falta es el deploy — **pospuesto a pedido del usuario**, que quiere subirlo en otra sesión. Detalle completo en [ROADMAP.md](./ROADMAP.md).
 
 ## Instalación y desarrollo local
 

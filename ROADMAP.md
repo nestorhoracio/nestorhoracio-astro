@@ -1,6 +1,6 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-08-17)
+## Estado actual (2026-08-18)
 
 **El sitio ya levanta y las 19 páginas se generan bien** (`npm run build` — verificado con capturas y scripts de Playwright en home, blog, portfolio, contacto, política de privacidad, 404, dark mode y menú mobile; sin errores de consola en ninguna ruta). Lo que existe:
 
@@ -11,7 +11,7 @@
 - `Layout.astro`, `Header.astro` (dark mode con swap de logo + scroll-spy + menú mobile, todo funcional) y `Footer.astro`.
 - Páginas: `index.astro` (home one-pager, con contenido real transcripto del sitio en vivo), `blog/index.astro` (hub), `[slug].astro` (plantilla plana compartida por posts de blog y proyectos de portfolio), `contacto/index.astro` + `public/contact.php` (formulario funcional, ver CLAUDE.md), `politica-de-privacidad/index.astro` (redactada de cero, ver CLAUDE.md).
 
-**SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). Lo que **no** existe todavía: una imagen OG de marca (1200×630, hoy el fallback es el isotipo circular) y todo lo de deploy (repo en GitHub, GitHub Actions, cuenta FTP) — **deploy queda para el final a pedido del usuario**, que quiere verlo bien terminado antes de subirlo. El usuario ya dio el visto bueno a la parte visual/UX ("para mi visión ya estaría pronto").
+**SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). **Seguridad ya tiene headers HTTP endurecidos** (CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy en `.htaccess`) y throttle básico en el formulario de contacto (ver changelog sesión 7). **`contact.php` ya tiene el email real** (`nesthora@gmail.com`) y **las 3 imágenes de `95-en-pagespeed-movil.md` ya están locales** (`public/images/blog/`, no dependen más del WordPress real, ver changelog sesión 8). **El usuario ya revisó y aprobó el texto de la Política de Privacidad** (ver changelog sesión 9) — sigue sin ser asesoramiento legal formal, pero ya no es un borrador pendiente de aprobación. **Ya existe una imagen OG de marca real** (`public/images/og/og-default.png`, 1200×630, ver changelog sesión 10) — el sitio está completo en todo lo que no es deploy. Lo único que **no** existe todavía es el deploy en sí (repo en GitHub, GitHub Actions, cuenta FTP) — **queda para el final a pedido del usuario**, que quiere verlo bien terminado antes de subirlo. El usuario ya dio el visto bueno a la parte visual/UX ("para mi visión ya estaría pronto").
 
 ## Decisiones tomadas en la sesión de arranque (2026-08-17)
 
@@ -25,13 +25,36 @@
 
 ## Próximo (en orden sugerido)
 
-**Deploy pospuesto a propósito** — decisión del usuario (2026-08-17, sesión 2): quiere ver el sitio bien terminado antes de subirlo a HostGator. No arrancar el repo en GitHub / GitHub Actions / cuenta FTP hasta que lo pida.
-
-1. **Antes de subir en algún momento**: completar `$destinatario` en `public/contact.php` con el email real (hoy es un placeholder, ver CLAUDE.md) y que el usuario revise el texto de `politica-de-privacidad/index.astro` (lo redacté yo, es un borrador razonable pero no asesoramiento legal).
-2. (Opcional, no bloqueante) Diseñar una imagen OG de marca 1200×630 — hoy el `og:image` cae al isotipo, que funciona pero no es un banner pensado para compartir en redes.
-3. **Cuando el usuario pida arrancar el deploy**: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo + probar en el hosting real que las reglas de `.htaccess` funcionan (`mod_rewrite`/`mod_expires`/`mod_headers`).
+**Todo lo que no es deploy está terminado.** Lo único que queda es, cuando el usuario lo pida: repo en GitHub + GitHub Actions (build + FTP deploy) + cuenta FTP dedicada en cPanel + confirmar que nestorhoracio.com ya apunta a este hosting HostGator (si el WordPress actual vive en otro proveedor, hay que planear el corte de DNS) + SSL activo + probar en el hosting real que las reglas de `.htaccess` funcionan (`mod_rewrite`/`mod_expires`/`mod_headers`), incluidos los headers de seguridad (ver changelog sesión 7). Pospuesto a propósito desde la sesión 2 — el usuario quiere ver el sitio bien terminado antes de subirlo. No arrancar el repo en GitHub / GitHub Actions / cuenta FTP hasta que lo pida.
 
 ## Changelog
+
+### 2026-08-18 (sesión 10) — Imagen OG de marca (último pendiente antes del deploy)
+El usuario pidió resolver la imagen OG para dejar todo listo antes de subir el sitio en otra sesión. Generada con Playwright, no diseñada a mano en un editor:
+- Se armó un HTML standalone (1200×630, fondo `#0F0F0F` como el header/footer) con la fuente Blinker y el isotipo embebidos como data URI, usando los tokens reales de `global.css` (`--color-secundario` ámbar para el eyebrow, `--color-acento` teal para el tagline) y el tagline real del hero ("Sitios web hechos para tu negocio, no para todos los negocios.").
+- **Hallazgo en el camino**: los PNG de `public/images/logo/` no son transparentes — son opacos con fondo blanco cuadrado (verificado leyendo el chunk IHDR: color type 3, sin `tRNS`). Puestos a tamaño grande sobre fondo oscuro se veían como una caja blanca cruda. Se resolvió sin tocar los PNG originales: el logo va dentro de un contenedor con `border-radius` + `overflow: hidden` + sombra, que lo convierte en una placa tipo "app icon" en vez de una caja accidental.
+- Renderizado con `npx playwright screenshot --viewport-size "1200,630"` sobre el HTML (Playwright ya estaba disponible vía npx, usado antes para las capturas de QA). Guardado en `public/images/og/og-default.png`.
+- `Layout.astro`: el fallback de `og:image`/`twitter:image` pasó de `/images/logo/isotipo-full-color.png` a `/images/og/og-default.png`. Afecta a las páginas que no pasan su propio `image` (home, 404, hub de blog, contacto, política de privacidad) — los posts de blog y proyectos de portfolio siguen usando su propia portada.
+- `npm run build`: 19 páginas, sin errores. Verificado con `grep` sobre el HTML generado que `og:image` apunta a la URL nueva.
+- Con esto, el sitio queda completo en todo lo que no es deploy — lo único que falta es el deploy en sí, pospuesto a pedido del usuario.
+
+### 2026-08-18 (sesión 9) — Política de Privacidad aprobada por el usuario
+El usuario leyó el texto de `politica-de-privacidad/index.astro` (redactado por Claude en la sesión 2, ver changelog) y confirmó estar 100% de acuerdo. No hubo cambios de contenido — queda aprobado tal cual está. Sigue sin ser asesoramiento legal formal (nadie con matrícula lo revisó), pero ya no es un borrador pendiente: si en algún momento se agrega Analytics, un CMS u otra recolección de datos, hay que volver a actualizarla y probablemente pedir otra revisión.
+
+### 2026-08-18 (sesión 8) — Email real en contact.php e imágenes locales
+El usuario confirmó el email destinatario y pidió cerrar los dos pendientes que había dejado la auditoría de la sesión 7:
+- **`public/contact.php`**: `$destinatario` pasó de placeholder a `nesthora@gmail.com` (email confirmado por el usuario). Sacado el comentario "OJO antes de subir..." que ya no aplica.
+- **Imágenes hotlinkeadas de `95-en-pagespeed-movil.md`**: bajadas las 3 (`pagespeedmovil-1024x439.png`, `pagespeedordenador-1024x492.png`, `gtmetrix-1024x375.jpg`) a `public/images/blog/` y reescrito el post para referenciarlas en local en vez de `https://nestorhoracio.com/wp-content/uploads/...`. Se simplificó el `srcset`/`sizes` responsive que traía de WordPress (no valía la pena replicarlo para 3 capturas de pantalla dentro del cuerpo) y se les agregó `alt` descriptivo (antes venía vacío).
+- `npm run build`: 19 páginas, sin errores. Verificado que las 3 imágenes quedan en `dist/images/blog/` y que el HTML generado ya no referencia el dominio de WordPress.
+
+### 2026-08-18 (sesión 7) — Auditoría SEO/seguridad y endurecimiento de headers
+El usuario pidió, a partir de CLAUDE.md/ROADMAP.md/README.md, un diagnóstico de si SEO y seguridad de datos ya estaban afinados. Veredicto: SEO ya estaba sólido (JSON-LD, canonical, sitemap, robots.txt, permalinks alineados, 404); seguridad tenía la base bien (honeypot, validación server-side, anti header-injection, HTTPS forzado) pero le faltaba endurecimiento de headers HTTP y fricción anti-abuso en el form. El usuario pidió cerrar esos gaps:
+- **`public/.htaccess`**: agregados `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security` (sin `preload` hasta confirmar HTTPS estable en HostGator real), `Permissions-Policy` y una `Content-Security-Policy` (`default-src 'self'`, ajustada porque no hay recursos externos ni scripts inline reales — el único `<script>` inline es el JSON-LD, que el HTML spec no trata como script ejecutable, así que CSP no lo bloquea; los `<script>` de `Header.astro`/`contacto/index.astro` los bundlea Astro como archivos externos).
+- **`src/pages/404.astro`**: sacado el único `style=""` inline que había en `src/` (pasado a un `<style>` scoped) para que `style-src` no necesite `'unsafe-inline'`.
+- **`public/contact.php`**: throttle de 20s por cookie (`nh_last_submit`) contra doble-envío/spam básico — no reemplaza un CAPTCHA, un bot sin cookies lo esquiva.
+- **`src/pages/contacto/index.astro`**: nuevo mensaje de feedback para `error=espera`.
+- **Hallazgo nuevo, no relacionado con el pedido**: 3 imágenes de `95-en-pagespeed-movil.md` siguen hotlinkeadas al WordPress real (`nestorhoracio.com/wp-content/uploads/...`) — van a romperse el día del corte de DNS. Anotado como pendiente arriba, no resuelto en esta sesión.
+- `npm run build`: sigue en 19 páginas, sin errores. No se pudo probar el efecto real de los headers de Apache en local (el dev server de Astro no interpreta `.htaccess`) — queda para confirmar con `curl -I` una vez deployado.
 
 ### 2026-08-17 (sesión 6) — SEO, .htaccess, 404, y fix real del bug de listas
 El usuario dio el visto bueno a lo visual ("para mi visión ya estaría pronto") y pidió seguir con otra cosa — se avanzó con los pendientes técnicos que quedaban antes del deploy:

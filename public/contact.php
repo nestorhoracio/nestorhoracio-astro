@@ -4,11 +4,9 @@
  * copia todo lo de public/ tal cual al build) porque HostGator no puede
  * ejecutar nada del build de Astro — esto es lo único server-side del
  * sitio. Ver CLAUDE.md.
- *
- * OJO antes de subir a HostGator: completar $destinatario más abajo.
  */
 
-$destinatario = 'PON-TU-EMAIL-AQUI@nestorhoracio.com';
+$destinatario = 'nesthora@gmail.com';
 $sitio = 'https://nestorhoracio.com';
 
 function volver($query) {
@@ -26,6 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if (!empty($_POST['website'])) {
     volver('ok=1');
 }
+
+// Throttle simple: no más de un envío cada 20s desde el mismo navegador.
+// Fricción básica (doble-click, script simple) — no es CAPTCHA, un bot
+// que no persiste cookies lo esquiva sin esfuerzo.
+if (isset($_COOKIE['nh_last_submit']) && (time() - (int) $_COOKIE['nh_last_submit']) < 20) {
+    volver('error=espera');
+}
+setcookie('nh_last_submit', (string) time(), time() + 3600, '/');
 
 $nombre = trim($_POST['nombre'] ?? '');
 $email = trim($_POST['email'] ?? '');

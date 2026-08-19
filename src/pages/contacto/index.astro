@@ -18,6 +18,9 @@ import "../../styles/contact.css";
       Hubo un problema al enviar el mensaje. Probá de nuevo o escribime por
       <a href="https://wa.me/59898472684" target="_blank" rel="noopener">WhatsApp</a>.
     </div>
+    <div id="contactFeedbackWait" class="contact-feedback contact-feedback--error" role="alert">
+      Ya recibí tu mensaje anterior — esperá unos segundos antes de volver a enviar.
+    </div>
 
     <form class="contact-form" action="/contact.php" method="POST">
       <div class="contact-form__hp" aria-hidden="true">
@@ -48,6 +51,8 @@ import "../../styles/contact.css";
     const params = new URLSearchParams(location.search);
     if (params.get("ok")) {
       document.getElementById("contactFeedbackOk")?.classList.add("is-visible");
+    } else if (params.get("error") === "espera") {
+      document.getElementById("contactFeedbackWait")?.classList.add("is-visible");
     } else if (params.get("error")) {
       document.getElementById("contactFeedbackError")?.classList.add("is-visible");
     }
