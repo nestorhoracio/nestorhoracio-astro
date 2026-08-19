@@ -12,11 +12,11 @@ Migración de **nestorhoracio.com** (portfolio/sitio profesional de desarrollo w
 - `astro:assets` para las imágenes.
 - Formulario de contacto vía script PHP propio (HostGator soporta PHP; no se usa un servicio externo).
 - JSON-LD (`WebSite`/`BlogPosting`/`CreativeWork`) + `robots.txt` + `.htaccess` para Apache.
-- Git + GitHub Actions (build) → deploy por FTP/SFTP a HostGator (pospuesto hasta que el usuario dé el OK).
+- Git + GitHub Actions (build) → deploy por FTPS a HostGator, disparado en cada push a `main`.
 
 ## Estado del proyecto
 
-**El sitio está en producción**: [nestorhoracio.com](https://nestorhoracio.com) ya sirve el sitio Astro (deploy completado y verificado el 2026-08-19). 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, imagen OG de marca propia) y seguridad (headers HTTP endurecidos, throttle en el formulario) confirmados en el hosting real. Repo en GitHub ([nestorhoracio/nestorhoracio-astro](https://github.com/nestorhoracio/nestorhoracio-astro)): cada push a `main` redeploya solo vía GitHub Actions + FTPS a HostGator. Queda pendiente el borrado definitivo de WordPress (pospuesto a propósito unos días). Detalle completo en [ROADMAP.md](./ROADMAP.md).
+**El sitio está en producción**: [nestorhoracio.com](https://nestorhoracio.com) ya sirve el sitio Astro (deploy completado y verificado el 2026-08-19). 19 páginas — home (one-pager con hero, portfolio, servicios y sobre mí), hub de blog, 8 posts, 6 proyectos de portfolio, contacto (formulario funcional vía `contact.php`), Política de Privacidad y 404 — con el diseño real portado (colores, tipografía, dark mode con scroll-spy, menú mobile), SEO (JSON-LD, `robots.txt`, imagen OG de marca propia) y seguridad (headers HTTP endurecidos, throttle en el formulario) confirmados en el hosting real. **PageSpeed Insights sobre el sitio real: Rendimiento 100, SEO 100, Prácticas recomendadas 100** — el resultado concreto de dejar WordPress/Divi por Astro. Repo en GitHub ([nestorhoracio/nestorhoracio-astro](https://github.com/nestorhoracio/nestorhoracio-astro)): cada push a `main` redeploya solo vía GitHub Actions + FTPS a HostGator. Pendientes: borrado definitivo de WordPress (pospuesto a propósito unos días) y un problema de entrega de mail del formulario de contacto (escalado a soporte de HostGator). Detalle completo en [ROADMAP.md](./ROADMAP.md).
 
 ## Instalación y desarrollo local
 
@@ -44,7 +44,7 @@ nestorhoracio-astro/
 │   └── fetch-wp-content.mjs   # extrae el blog desde la REST API de WP + limpia shortcodes de Divi
 ├── public/
 │   ├── fonts/             # Blinker self-hosted (400/600)
-│   ├── images/logo/       # isotipo real (claro/oscuro)
+│   ├── images/logo/       # isotipo real (claro/oscuro), + versiones -sm para uso chico en pantalla
 │   ├── contact.php        # procesa el formulario de /contacto/ (único código server-side)
 │   ├── robots.txt
 │   └── .htaccess          # https, sin www, trailing slash, 404, cache de assets
