@@ -4,6 +4,12 @@
  * copia todo lo de public/ tal cual al build) porque HostGator no puede
  * ejecutar nada del build de Astro — esto es lo único server-side del
  * sitio. Ver CLAUDE.md.
+ *
+ * El envío usa la API de Resend (no mail() nativo de PHP): mail() reportaba
+ * éxito pero el correo nunca llegaba a Gmail, ni a spam, con SPF/DKIM bien
+ * configurados — típico problema de reputación de la IP compartida de
+ * HostGator, no algo arreglable por config. Resend saca el envío del Exim
+ * local del hosting. Ver ROADMAP.md.
  */
 
 $destinatario = 'nesthora@gmail.com';
@@ -45,11 +51,14 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     volver('error=email');
 }
 
-// Anti header-injection: ningún campo puede meter saltos de línea en los
-// headers del mail (los que sí van a headers: email, nombre).
-$limpiar_header = fn($v) => str_replace(["\r", "\n"], '', $v);
-$nombre_h = $limpiar_header($nombre);
-$email_h = $limpiar_header($email);
+// config.php no se commitea (ver .gitignore) — lo genera el workflow de
+// deploy a partir del secret RESEND_API_KEY. Si falta (deploy sin
+// configurar todavía), fallar en vez de intentar mail() de nuevo.
+$configPath = __DIR__ . '/config.php';
+$apiKey = file_exists($configPath) ? (string) require $configPath : '';
+if ($apiKey === '') {
+    volver('error=envio');
+}
 
 $asunto = 'Nuevo mensaje de contacto — nestorhoracio.com';
 $cuerpo = "Nombre: $nombre\n" .
@@ -58,10 +67,27 @@ $cuerpo = "Nombre: $nombre\n" .
 
 // From con el dominio propio (mejor entregabilidad); Reply-To al
 // visitante para poder responderle directo desde el mail.
-$headers = "From: Formulario nestorhoracio.com <noreply@nestorhoracio.com>\r\n" .
-           "Reply-To: $nombre_h <$email_h>\r\n" .
-           "Content-Type: text/plain; charset=UTF-8\r\n";
+$payload = json_encode([
+    'from' => 'Formulario nestorhoracio.com <noreply@send.nestorhoracio.com>',
+    'to' => [$destinatario],
+    'reply_to' => $email,
+    'subject' => $asunto,
+    'text' => $cuerpo,
+]);
 
-$enviado = mail($destinatario, $asunto, $cuerpo, $headers);
+$ch = curl_init('https://api.resend.com/emails');
+curl_setopt_array($ch, [
+    CURLOPT_POST => true,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 10,
+    CURLOPT_HTTPHEADER => [
+        'Authorization: Bearer ' . $apiKey,
+        'Content-Type: application/json',
+    ],
+    CURLOPT_POSTFIELDS => $payload,
+]);
+curl_exec($ch);
+$http = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
 
-volver($enviado ? 'ok=1' : 'error=envio');
+volver(($http >= 200 && $http < 300) ? 'ok=1' : 'error=envio');

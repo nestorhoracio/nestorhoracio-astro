@@ -16,6 +16,10 @@ pnpm-debug.log*
 .env
 .env.production
 
+# API key de Resend para el formulario de contacto — la genera el workflow
+# de deploy a partir del secret RESEND_API_KEY, nunca vive en el repo (es público)
+public/config.php
+
 # macOS-specific files
 .DS_Store
 

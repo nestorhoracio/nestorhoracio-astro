@@ -25,6 +25,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # public/config.php no se commitea (repo público) — se genera acá a
+      # partir del secret y Astro lo copia tal cual a dist/ en el build de
+      # abajo. Ver public/contact.php.
+      - name: Generar config.php con la API key de Resend
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          cat > public/config.php <<PHP
+          <?php
+          return '$RESEND_API_KEY';
+          PHP
+
       - name: Build
         run: npm run build
 

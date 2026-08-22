@@ -25,7 +25,14 @@
 
 ## Próximo (en orden sugerido)
 
-**Pendiente activo #1: el formulario de contacto no entrega mail.** `contact.php` funciona (honeypot, validación, `mail()` devuelve éxito, redirect a `?ok=1`), pero el correo a `nesthora@gmail.com` no llega ni a la bandeja principal ni a spam — probado dos veces. SPF (`v=spf1 a mx include:websitewelcome.com ~all`) y DKIM están bien configurados, y la IP compartida (69.6.201.250) no está en Spamhaus ni Barracuda. Este cPanel no tiene la herramienta "Track Delivery" (correo recortado, ver "No tocar sin avisar"), así que no se puede ver el log de Exim sin soporte. Se escaló a soporte de HostGator (chat, pidiendo que revisen el log de Exim/cola de correo para el usuario `dccddffa`) — esperando respuesta. **No activar Titan Mail** como intento de arreglo — es un servicio de correo de terceros que no cambia cómo `contact.php` manda el mail (usa el Exim local del servidor, no Titan) y de paso tocaría los MX del dominio sin necesidad.
+**Pendiente activo #1: confirmar que el secret `RESEND_API_KEY` esté cargado en GitHub, y limpiar un SPF duplicado encontrado de paso, antes de pushear.** El código ya no depende de HostGator para esto (ver changelog sesión 12) — `contact.php` manda el mail por la API de Resend en vez de `mail()` nativo. Avance de la sesión 2026-08-22 (guiada paso a paso con capturas):
+1. ✅ Cuenta creada en Resend, API key generada.
+2. ✅ Dominio `send.nestorhoracio.com` (subdominio, no la raíz — recomendación de Resend, ver CLAUDE.md) agregado y verificado en Resend: DKIM y SPF (2 CNAME) con status "Verified", DMARC agregado. Domain status general "Partially Verified" (falta solo el CNAME de Tracking, salteado a propósito).
+3. ⚠️ **Hallazgo de paso**: en el Zone Editor de cPanel apareció un TXT duplicado en `nestorhoracio.com.` — dos registros idénticos `v=spf1 a mx include:websitewelcome.com ~all`. Un dominio con dos registros SPF es inválido (RFC 7208) y muchos validadores lo tratan como error — es un candidato fuerte a haber sido la causa real de que Gmail descartara el mail original en silencio. **Pendiente**: entrar a cPanel → Zone Editor → `nestorhoracio.com` → Administrar, y borrar uno de los dos registros TXT SPF duplicados (dejar solo uno).
+4. Falta confirmar que la API key se haya cargado como secret `RESEND_API_KEY` en GitHub (repo → Settings → Secrets and variables → Actions) — el usuario dijo haberlo hecho en la sesión pero no se re-confirmó explícitamente antes de pushear el código.
+5. Falta pushear los cambios de código (`public/contact.php`, `.github/workflows/deploy.yml`, `.gitignore`) — no se hizo todavía, queda para cuando el usuario confirme el secret.
+
+Hasta que el secret esté cargado y el código se pushee, `contact.php` en producción sigue con la versión vieja (`mail()` nativo, sigue sin entregar). **No activar Titan Mail** — sigue sin tener sentido, ya no se usa ni siquiera el Exim local del hosting.
 
 **Pendiente activo #2: re-confirmar el puntaje de Accesibilidad en PageSpeed.** Los 3 hallazgos reales ya están arreglados y en producción (ver changelog sesión 11) — falta solo volver a correr PageSpeed Insights para confirmar que subió de 93. El usuario decidió esperar unos días antes de reintentar (la primera vez después del fix, PSI devolvió un reporte viejo cacheado).
 
@@ -36,6 +43,21 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-08-22 (sesión 12) — Formulario de contacto: de `mail()` a la API de Resend
+HostGator no respondió al reclamo de soporte (chat pidiendo revisar el log de Exim, ver sesión 11). El usuario decidió no esperar más y buscar una alternativa que no dependa de HostGator. Se le presentaron 3 opciones (servicio transaccional vía cURL, probar antes un ajuste gratis de alineación de Return-Path, u otro proveedor tipo Brevo/Mailgun) — eligió ir directo al servicio transaccional, con Resend como recomendación.
+- **`public/contact.php`**: reemplazado el envío por `mail()` nativo por un POST vía cURL a `https://api.resend.com/emails` (JSON: `from`/`to`/`reply_to`/`subject`/`text`). Ya no hace falta la sanitización manual anti header-injection (el JSON la cubre) — se sacó ese bloque. El resto del script (honeypot, throttle de 20s, validación de campos) queda igual.
+- **API key de Resend, fuera del repo**: el repo es público, así que la key no puede vivir en `contact.php`. Se agregó un paso nuevo en `.github/workflows/deploy.yml` (antes del build) que genera `public/config.php` a partir del secret de GitHub `RESEND_API_KEY` — Astro lo copia a `dist/` como un archivo más y nunca queda commiteado (agregado a `.gitignore`). Si el secret no está cargado, `config.php` sale vacío y `contact.php` falla limpio a `error=envio`.
+- No se corrió `npm run build` en esta sesión porque el cambio es puramente del backend PHP (no toca nada que Astro compile) — se puede probar recién en producción real, igual que pasó con el CSP en la sesión 11 (el dev server no ejecuta PHP). Sí se probó `contact.php` en local con `php -S` y una API key falsa: el flujo completo (lectura de `config.php`, llamada cURL, redirect según el código HTTP de respuesta) funciona sin errores fatales.
+
+**Setup manual en Resend, guiado paso a paso por capturas de pantalla, mismo día:**
+- Cuenta creada, API key generada (con permiso "Sending access", no acceso total).
+- Dominio agregado como **`send.nestorhoracio.com`** (subdominio, no `nestorhoracio.com` a secas — decisión tomada porque Resend recomienda fuerte no usar el dominio raíz, para no arriesgar el SPF/MX del correo real del dominio).
+- 4 registros DNS cargados en el Zone Editor de cPanel (zona `nestorhoracio.com`): TXT `resend._domainkey.send` (DKIM), CNAME `rsend.send` y CNAME `send.send` (SPF), TXT `_dmarc` (DMARC, `p=none`). Un error de tipeo en el primer CNAME (el valor de destino se pegó también en el campo Nombre) se detectó por captura y se corrigió antes de verificar.
+- Verificación en Resend: DKIM y SPF quedaron **"Verified"**. Se salteó a propósito el CNAME de Tracking (`links.send`, solo analítica de clics, no aplica a un mail de texto plano) — por eso el dominio queda como **"Partially Verified"** general, no afecta el envío.
+- `public/contact.php`: `from` actualizado de `noreply@nestorhoracio.com` a **`noreply@send.nestorhoracio.com`** para que coincida con el dominio verificado.
+- **Hallazgo no relacionado, encontrado de paso en el Zone Editor**: dos registros TXT SPF idénticos en `nestorhoracio.com.` (duplicados) — inválido según RFC 7208, candidato fuerte a haber sido la causa real de que Gmail descartara el mail original en silencio. Pendiente de limpiar (ver "Próximo" arriba), no se tocó todavía.
+- Queda pendiente: confirmar que `RESEND_API_KEY` esté cargado como secret en GitHub, borrar el SPF duplicado, y pushear el código (`contact.php`, `deploy.yml`, `.gitignore`) — nada de esto se hizo todavía en esta sesión.
 
 ### 2026-08-19 (sesión 11) — Arranca el deploy: repo GitHub + workflow de Actions
 El usuario dio el OK para empezar el deploy (pospuesto desde la sesión 2). Hecho lo que no requiere credenciales de HostGator:
