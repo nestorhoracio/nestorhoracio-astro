@@ -98,6 +98,8 @@ Relevado el 2026-08-17 a partir de capturas de pantalla (desktop + mobile devtoo
 - El schema de `blog` en `src/content.config.ts`: `cover` es opcional a propósito (ver Gotchas).
 - `server-dir: './'` en `.github/workflows/deploy.yml` — ver "Deploy real a HostGator" arriba, no volver a poner `./public_html/`.
 - Los títulos de card/ítem en `index.astro` (portfolio, servicios, sobre-mí) son `<h3>`, no `<h4>` — cada sección arranca en `<h2>`, así que el siguiente nivel tiene que ser `<h3>` para no saltar un nivel (PageSpeed/Lighthouse lo marca como error de accesibilidad). Si se agrega una sub-sub-sección alguna vez, recién ahí usar `<h4>`.
+- `public/config.php` no se commitea (`.gitignore`) — lo genera `.github/workflows/deploy.yml` a partir del secret `RESEND_API_KEY` en cada deploy. No hardcodear la API key de Resend en `contact.php` ni en ningún archivo versionado — el repo es público.
+- El remitente de `contact.php` es `noreply@send.nestorhoracio.com` (el subdominio verificado en Resend), no `noreply@nestorhoracio.com` — si se cambia el dominio verificado en Resend, hay que actualizar el `from` en `contact.php` para que coincida, si no el envío falla.
 
 ## Comandos útiles
 
