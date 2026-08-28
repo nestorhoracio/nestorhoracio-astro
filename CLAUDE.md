@@ -14,6 +14,42 @@ Objetivo: velocidad de carga y SEO técnico — y de paso, es el propio caso de 
 - Formulario de contacto: script PHP propio alojado en HostGator (no Web3Forms — decisión explícita del usuario, ver ROADMAP.md sesión 2026-08-17).
 - Deploy: GitHub Actions → build → sube `dist/` por FTP/SFTP a HostGator. El hosting es compartido básico (sin SSH, sin Git Version Control, sin Node.js en el servidor — confirmado por el usuario), así que el build **no puede correr en HostGator**: corre en el runner de GitHub y solo se sube el output estático.
 
+## Modo de trabajo
+
+- Claude Code propone; NH revisa y aprueba antes de aplicar. Diffs chicos y explicados por
+  sobre reescrituras grandes. Si una tarea toca muchos archivos, plantear el plan y esperar OK.
+- Español rioplatense en contenido y documentación. Nombres de archivo en minúsculas, con
+  guiones, sin acentos.
+- Las decisiones de negocio o de cliente se preguntan, no se deducen.
+- Lo que está en "No tocar sin avisar" es intencional aunque parezca un error.
+
+### Arranque de sesión
+
+1. Leer ROADMAP.md → Estado actual y Próximo.
+2. Leer las secciones Gotchas y No tocar sin avisar de este archivo.
+3. `git status` y `git log --oneline -5`.
+4. Decir en una frase dónde está el proyecto y qué se propone hacer. Esperar confirmación
+   antes de escribir código.
+
+Si el ROADMAP contradice el código, **gana el código**: avisar la discrepancia y corregir el
+ROADMAP en el cierre.
+
+### Cierre de sesión
+
+1. ROADMAP.md: actualizar Estado actual, agregar entrada fechada en Hecho
+   (`### AAAA-MM-DD — Título corto`), mover lo resuelto fuera de En curso / Próximo.
+2. Gotcha nuevo descubierto → agregarlo acá con su evidencia (síntoma → causa → cómo se
+   confirmó → patrón correcto → fecha).
+3. Cambió cómo funciona algo → actualizar la sección correspondiente del README.
+4. Lo que quedó a medias va a En curso, con qué falta exactamente.
+5. Proponer el mensaje de commit. No commitear sin OK.
+
+### Higiene de la documentación
+
+El ROADMAP es un changelog resumido, no una bitácora: el detalle de *cómo funciona* migra al
+README y en el ROADMAP queda el titular. Al pasar de ~150 líneas de changelog, condensar los
+meses viejos en un párrafo y conservar completo el último trimestre.
+
 ## Fuente de verdad del contenido a migrar
 
 `nestorhoracio.com` tiene la REST API de WordPress abierta y sin bloqueos (a diferencia de jesuseselcamino.uy no hace falta User-Agent especial, aunque el script lo manda igual por las dudas). Relevado el 2026-08-17:

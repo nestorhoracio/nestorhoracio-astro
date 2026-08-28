@@ -1,6 +1,6 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-08-19)
+## Estado actual (2026-08-27)
 
 **El sitio ya levanta y las 19 páginas se generan bien** (`npm run build` — verificado con capturas y scripts de Playwright en home, blog, portfolio, contacto, política de privacidad, 404, dark mode y menú mobile; sin errores de consola en ninguna ruta). Lo que existe:
 
@@ -13,7 +13,9 @@
 
 **SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). **Seguridad ya tiene headers HTTP endurecidos** (CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy en `.htaccess`) y throttle básico en el formulario de contacto (ver changelog sesión 7). **`contact.php` ya tiene el email real** (`nesthora@gmail.com`) y **las 3 imágenes de `95-en-pagespeed-movil.md` ya están locales** (`public/images/blog/`, no dependen más del WordPress real, ver changelog sesión 8). **El usuario ya revisó y aprobó el texto de la Política de Privacidad** (ver changelog sesión 9) — sigue sin ser asesoramiento legal formal, pero ya no es un borrador pendiente de aprobación. **EL SITIO YA ESTÁ EN VIVO en https://nestorhoracio.com** (sesión 11, 2026-08-19) — el deploy se completó y quedó verificado: home, blog, portfolio, 404, formulario de contacto, HTTPS forzado, redirect sin `www`, trailing slash y todos los headers de seguridad del `.htaccess` (CSP, HSTS, X-Frame-Options, Permissions-Policy) confirmados contra el hosting real con `curl -I`. WordPress fue movido fuera de `public_html/` (backup completo hecho antes, ver changelog sesión 11) — la cuenta HostGator ahora sirve el sitio Astro. Repo en GitHub (`nestorhoracio/nestorhoracio-astro`, público, rama `main`) y workflow de GitHub Actions (`.github/workflows/deploy.yml`, build + FTPS) funcionando: cada push a `main` redeploya solo. Ya se verificó también contra producción real: **PageSpeed Insights dio Rendimiento 100, SEO 100, Prácticas recomendadas 100 y Accesibilidad 93** — y los 3 hallazgos reales de accesibilidad (links de las cards de portfolio/blog sin nombre accesible, `<h4>` saltando el `<h3>`, logo de 500×500 servido a 44×44) ya se arreglaron y deployaron (ver changelog). Falta re-confirmar el puntaje nuevo — PageSpeed devolvió un reporte viejo cacheado la primera vez que se probó después del fix; el usuario decidió esperar unos días antes de volver a correrlo. **El formulario de contacto ya entrega mail en producción** (2026-08-22, sesión 12 — migrado de `mail()` a la API de Resend, ver changelog). Lo único que queda es el borrado definitivo de WordPress (pasos 7-9 en "Próximo" abajo), pospuesto a propósito.
 
-## Decisiones tomadas en la sesión de arranque (2026-08-17)
+## Decisiones tomadas
+
+### Sesión de arranque (2026-08-17)
 
 - **Hosting**: HostGator (ya contratado, 2 años), no Cloudflare Pages. Plan compartido básico: **sin SSH, sin Git Version Control, sin Node.js** (confirmado por el usuario revisando su cPanel).
 - **Deploy**: GitHub Actions compila (`npm run build`) y sube `dist/` por FTP/SFTP a HostGator. Pendiente: crear el repo en GitHub, crear una cuenta FTP dedicada en cPanel (no usar la cuenta principal), armar el workflow y guardar las credenciales como secrets.
@@ -22,6 +24,16 @@
 - **URLs/redirects/404 en Apache**: pendiente de armar `.htaccess` (no hay `_redirects`/`_headers` como en Cloudflare).
 - **SSL**: pendiente confirmar que AutoSSL de cPanel esté activo para el dominio.
 - **Orden de trabajo** (agregado 2026-08-17, sesión 2): el deploy se hace al final, cuando el usuario dé el OK — prioridad es dejar el sitio completo primero.
+
+### Sesiones posteriores
+
+- **Atalaias Rou agregado como 6to proyecto de portfolio** (2026-08-17, sesión 3): no está en el sitio WP original, pero el usuario pidió sumarlo. Descripción y stack sacados de su propio README real (no inventados), captura tomada en vivo de su deploy temporal en Netlify.
+- **No se agregaron testimonios de clientes en el hero** (2026-08-17, sesión 4): no había testimonios reales disponibles y no correspondía inventarlos — se usó como prueba social una fila de stats verificables (6 proyectos reales / 2 stacks / 100% código a medida).
+- **CSP estricta, `default-src 'self'` sin `'unsafe-inline'`** (2026-08-18, sesión 7): el JSON-LD inline no lo bloquea (el spec no lo trata como script ejecutable), pero forzó sacar el único `style=""` inline que había en `src/` — y más adelante (sesión 11) forzó `assetsInlineLimit: 0` en Vite cuando Astro empezó a inlinear `<script>`/`<style>` chicos por su cuenta.
+- **Repo de GitHub público** (2026-08-19, sesión 11): a pedido del usuario — sirve como caso de estudio ("así migré mi propio sitio a Astro").
+- **WordPress se mueve, no se borra, antes del corte** (2026-08-19, sesión 11): backup completo primero (cPanel Backup Wizard) → mover a `public_html_wordpress_backup/` → recién ahí deployar. Borrado definitivo pospuesto a propósito (ver Próximo).
+- **Resend en vez de seguir con `mail()` nativo** (2026-08-22, sesión 12): HostGator no respondió al reclamo de soporte sobre el log de Exim. Se evaluaron 3 alternativas (ajuste gratis de alineación de Return-Path, otro proveedor tipo Brevo/Mailgun, o un servicio transaccional vía cURL) — se eligió ir directo a un servicio transaccional, con Resend como recomendación. Se descartó además activar Titan Mail: no habría cambiado nada (`contact.php` usa el Exim local, no Titan) y hubiera tocado los MX sin necesidad.
+- **Dominio de envío: subdominio `send.nestorhoracio.com`, no `nestorhoracio.com` a secas** (2026-08-22, sesión 12): Resend recomienda fuerte no usar el dominio raíz, para no arriesgar el SPF/MX que ya usa el correo real del dominio.
 
 ## Próximo (en orden sugerido)
 
