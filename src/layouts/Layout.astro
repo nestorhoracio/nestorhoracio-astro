@@ -51,6 +51,51 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     {jsonLdList.map((schema) => (
       <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
     ))}
+
+    <!-- Google Analytics (GA4). El loader remoto va is:inline a propósito
+         (Astro no debe tocarlo: tiene que quedar "async" tal cual, sin
+         type="module"). El script de abajo, en cambio, NO lleva is:inline
+         para que Astro lo externalice a un archivo propio -- el CSP de
+         public/.htaccess no tiene 'unsafe-inline' en script-src, así que un
+         <script> con código inline quedaría bloqueado por el navegador
+         (mismo problema que ya pasó con Header.astro, ver CLAUDE.md). -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-78H35GJS30"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag() {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag("js", new Date());
+      window.gtag("config", "G-78H35GJS30");
+
+      // Clic en cualquier link a WhatsApp o a redes sociales, en cualquier
+      // parte del sitio (footer, hero, CTAs de los posts del blog, etc.) --
+      // delegado en document así no hace falta enganchar cada link a mano.
+      document.addEventListener("click", (event) => {
+        const target = event.target as HTMLElement | null;
+        const link = target?.closest("a[href]") as HTMLAnchorElement | null;
+        if (!link) return;
+
+        const href = link.href;
+
+        if (href.includes("wa.me") || href.includes("api.whatsapp.com")) {
+          window.gtag("event", "whatsapp_click", {
+            link_url: href,
+            link_text: link.textContent?.trim().slice(0, 100) || "",
+            page_path: window.location.pathname,
+          });
+          return;
+        }
+
+        if (href.includes("facebook.com") || href.includes("instagram.com")) {
+          window.gtag("event", "social_click", {
+            network: href.includes("facebook.com") ? "facebook" : "instagram",
+            link_url: href,
+            page_path: window.location.pathname,
+          });
+        }
+      });
+    </script>
   </head>
   <body>
     <Header />

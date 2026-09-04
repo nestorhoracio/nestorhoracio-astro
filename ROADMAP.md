@@ -1,6 +1,10 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-08-27)
+## Estado actual (2026-09-03)
+
+**Google Analytics 4 instalado y con tracking de WhatsApp/redes sociales, pusheado a producción, pendiente de confirmar en el panel de GA4** (sesión 13, ver changelog). Falta ver los primeros datos reales llegar a la propiedad (`G-78H35GJS30`) para dar el frente por cerrado del todo.
+
+## Estado anterior (2026-08-27)
 
 **El sitio ya levanta y las 19 páginas se generan bien** (`npm run build` — verificado con capturas y scripts de Playwright en home, blog, portfolio, contacto, política de privacidad, 404, dark mode y menú mobile; sin errores de consola en ninguna ruta). Lo que existe:
 
@@ -54,6 +58,14 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-09-03 (sesión 13) — Google Analytics 4 + tracking de WhatsApp y redes sociales
+El usuario pidió rastrear clics de WhatsApp en todo el sitio y, de ser posible, tráfico entrante/saliente de redes sociales. Tenía la propiedad de GA4 ya creada (`NH_Digital_Space`, ID `G-78H35GJS30`) pero **el sitio nunca había tenido el tag instalado** (confirmado: no había ningún `gtag`/`googletagmanager` en `src/`, coincide con el panel de GA4 mostrando cero datos).
+- **`src/layouts/Layout.astro`**: agregado el loader de `gtag.js` (`is:inline`, tiene que quedar exactamente como lo pide Google, sin que Astro lo procese) + un segundo `<script>` (sin `is:inline`, para que Astro lo externalice) con la inicialización de `dataLayer`/`gtag` y un listener de clic delegado en `document` que dispara `whatsapp_click` (cualquier link a `wa.me`) y `social_click` (Facebook/Instagram) sin importar en qué página o sección del DOM estén — cubre footer, hero, contacto, política de privacidad y los CTAs de WhatsApp embebidos como HTML crudo dentro de los `.md` del blog, todo con un solo cambio en el layout compartido.
+- **`public/.htaccess`**: el CSP (`default-src 'self'`, sin `unsafe-inline`) hubiera bloqueado a GA4 directo — se agregaron `script-src`/`connect-src`/`img-src` explícitos permitiendo `googletagmanager.com` y `google-analytics.com` (+ subdominios). Hubo que repetir `'self'` en cada directiva nueva porque declarar una directiva específica hace que deje de heredar `default-src`.
+- **Tráfico entrante desde redes sociales**: no necesitó código — es un informe automático de GA4 (adquisición por canal, "Organic Social") una vez que el tag está instalado.
+- Verificado con `npm run build` (19 páginas, sin errores) y con un script de Playwright contra `astro preview`: `window.gtag` queda definido, un clic en el botón del hero dispara `whatsapp_click` con los parámetros esperados, un clic en el ícono de Facebook del footer dispara `social_click`, y un clic en el CTA de WhatsApp embebido en el post `salto-de-ancla` (contenido markdown, no un componente) también dispara el evento — confirma que la delegación en `document` cubre el contenido inyectado desde las collections, no solo los componentes fijos. Sin errores de consola en ningún caso. El CSP en sí no se pudo probar en local (mismo gotcha de siempre: `astro preview` no manda headers de Apache) — pendiente confirmar con `curl -I`/el panel de GA4 contra producción real tras el deploy.
+- Pusheado a `main` para probar en producción (a pedido explícito del usuario). Queda pendiente confirmar en el panel de GA4 que empiezan a llegar eventos reales (`whatsapp_click`/`social_click` en Informes → Interacción → Eventos) y, si hace falta, marcarlos como eventos clave (conversión) desde el propio panel de GA4 — eso es un paso manual en la UI de Google, no en el código.
 
 ### 2026-08-22 (sesión 12) — Formulario de contacto: de `mail()` a la API de Resend
 HostGator no respondió al reclamo de soporte (chat pidiendo revisar el log de Exim, ver sesión 11). El usuario decidió no esperar más y buscar una alternativa que no dependa de HostGator. Se le presentaron 3 opciones (servicio transaccional vía cURL, probar antes un ajuste gratis de alineación de Return-Path, u otro proveedor tipo Brevo/Mailgun) — eligió ir directo al servicio transaccional, con Resend como recomendación.
