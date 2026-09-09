@@ -4,7 +4,11 @@ export const AUTHOR = {
   "@type": "Person" as const,
   name: "Néstor Horacio Díaz",
   url: SITE_URL,
-  jobTitle: "Desarrollador web freelance",
+  jobTitle: "Diseñador y desarrollador web freelance",
+  address: {
+    "@type": "PostalAddress" as const,
+    addressCountry: "UY",
+  },
   sameAs: ["https://www.facebook.com/nhdigitalspace", "https://www.instagram.com/nh_digital_space/"],
 };
 

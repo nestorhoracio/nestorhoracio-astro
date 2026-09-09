@@ -1,12 +1,12 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-09-08)
+## Estado actual (2026-09-09)
 
-**Botón "Calificame en Google" agregado al footer** (sesión 14, ver changelog), con su propio evento de GA4 (`google_review_click`). Pendiente de push/deploy al momento de escribir esto.
+**SEO del home ampliado de ciudad a país** (sesión 15, ver changelog): el copy dejó de anclarse a "Paso de los Toros" y ahora apunta a "diseñador web freelance en Uruguay". Pendiente de push al momento de escribir esto — una vez pusheado, el usuario manda a reindexar en Search Console.
 
-## Estado anterior (2026-09-03)
+## Estado anterior (2026-09-08)
 
-**Google Analytics 4 instalado y con tracking de WhatsApp/redes sociales, pusheado a producción, pendiente de confirmar en el panel de GA4** (sesión 13, ver changelog). Falta ver los primeros datos reales llegar a la propiedad (`G-78H35GJS30`) para dar el frente por cerrado del todo.
+**Botón "Calificame en Google" agregado al footer** (sesión 14) y **Google Analytics 4 con tracking de WhatsApp/redes sociales** (sesión 13), ambos pusheados a producción — detalle completo en el changelog.
 
 El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado, SEO, seguridad, accesibilidad, deploy real a HostGator) vive completo en el changelog, sesiones 1 a 11 abajo — no se repite acá para no duplicar (ver "Higiene de la documentación").
 
@@ -51,6 +51,14 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-09-09 (sesión 15) — SEO: de "Paso de los Toros" a "diseñador web freelance en Uruguay"
+El usuario quiere que lo encuentren en Google como "diseñador web freelancer en Uruguay", no acotado a la ciudad de Paso de los Toros (útil para captar clientes de todo el país, no solo locales). Cambiado el copy orientado a posicionamiento, sin tocar contenido factual de terceros:
+- **`src/pages/index.astro`**: `<title>` pasó de "Néstor Horacio Díaz — Desarrollo web a medida" a "Néstor Horacio Díaz — Diseñador Web Freelance en Uruguay"; meta `description` y el `<p>` del hero (compartían el mismo texto) pasaron de "Desde Paso de los Toros para toda Latinoamérica" a "Diseñador y desarrollador web freelance en Uruguay... en todo el país y Latinoamérica"; el bio de `#sobre-mi` pasó de "desarrollador web freelance desde Paso de los Toros, Uruguay" a "diseñador y desarrollador web freelance en Uruguay" (agrega "diseñador" porque el usuario también hace diseño, no solo desarrollo, y es parte de la frase que quiere captar).
+- **`src/lib/seo.ts`**: `AUTHOR.jobTitle` actualizado a "Diseñador y desarrollador web freelance" (coherente con el copy de arriba, se refleja en el JSON-LD `Person` de las 3 schemas — `WebSite`/`BlogPosting`/`CreativeWork` — porque todas comparten `AUTHOR`) y agregado `address: { "@type": "PostalAddress", addressCountry: "UY" }` — país en vez de ciudad, mismo criterio del pedido.
+- **No se tocó** la mención de "Paso de los Toros" en `politica-de-privacidad/index.astro` (domicilio legal del responsable de datos, no es copy de marketing — cambiarla sin que el usuario la revise de nuevo iría contra cómo se aprobó esa página en la sesión 9) ni en los `.md` de portfolio (`mimosos`, `252-plaza`, `barraca-hefesto`: ahí la ciudad es la ubicación real del *cliente*, un dato factual del caso de estudio, no del área de servicio de Néstor).
+- `npm run build`: 19 páginas, sin errores. Verificado con `grep` sobre `dist/index.html`: `<title>`, meta `description` y el JSON-LD `jobTitle`/`address` muestran el copy nuevo, y "Paso de los Toros" ya no aparece en esa página.
+- Pendiente: una vez pusheado, el usuario reenvía el sitemap/pide reindexación en Search Console para que Google levante el copy nuevo.
 
 ### 2026-09-08 (sesión 14) — Botón "Calificame en Google" en el footer
 El usuario pidió agregar un botón de reseñas de Google Business en el footer, con el short link real (`https://g.page/r/CTAU1Frf2jTHEAI/review`).
