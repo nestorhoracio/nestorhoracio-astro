@@ -1,21 +1,14 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-09-03)
+## Estado actual (2026-09-08)
+
+**Botón "Calificame en Google" agregado al footer** (sesión 14, ver changelog), con su propio evento de GA4 (`google_review_click`). Pendiente de push/deploy al momento de escribir esto.
+
+## Estado anterior (2026-09-03)
 
 **Google Analytics 4 instalado y con tracking de WhatsApp/redes sociales, pusheado a producción, pendiente de confirmar en el panel de GA4** (sesión 13, ver changelog). Falta ver los primeros datos reales llegar a la propiedad (`G-78H35GJS30`) para dar el frente por cerrado del todo.
 
-## Estado anterior (2026-08-27)
-
-**El sitio ya levanta y las 19 páginas se generan bien** (`npm run build` — verificado con capturas y scripts de Playwright en home, blog, portfolio, contacto, política de privacidad, 404, dark mode y menú mobile; sin errores de consola en ninguna ruta). Lo que existe:
-
-- Scaffold de Astro (`package.json`, `astro.config.mjs`, `tsconfig.json`) — mismo patrón minimalista que jesuseselcamino-astro, sin starter template de por medio.
-- `src/content.config.ts` con dos collections: `blog` (8 posts) y `portfolio` (6 proyectos, incluyendo Atalaias Rou — no está en el sitio WP original, se agregó a pedido del usuario con captura de su deploy temporal en Netlify, ver changelog).
-- `scripts/fetch-wp-content.mjs` — extrae los posts del blog desde la REST API y limpia el contenido de Divi (ver CLAUDE.md, sección Gotchas).
-- Diseño portado: `src/styles/global.css` (tokens), `header.css`, `footer.css`, `home.css`, `blog.css`, `contact.css`. Fuente Blinker self-hosted, logos reales en `public/images/logo/`.
-- `Layout.astro`, `Header.astro` (dark mode con swap de logo + scroll-spy + menú mobile, todo funcional) y `Footer.astro`.
-- Páginas: `index.astro` (home one-pager, con contenido real transcripto del sitio en vivo), `blog/index.astro` (hub), `[slug].astro` (plantilla plana compartida por posts de blog y proyectos de portfolio), `contacto/index.astro` + `public/contact.php` (formulario funcional, ver CLAUDE.md), `politica-de-privacidad/index.astro` (redactada de cero, ver CLAUDE.md).
-
-**SEO, `.htaccess` y 404 ya están hechos** (JSON-LD por tipo de página, `robots.txt`, apple-touch-icon, página 404 propia). **Seguridad ya tiene headers HTTP endurecidos** (CSP, X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy en `.htaccess`) y throttle básico en el formulario de contacto (ver changelog sesión 7). **`contact.php` ya tiene el email real** (`nesthora@gmail.com`) y **las 3 imágenes de `95-en-pagespeed-movil.md` ya están locales** (`public/images/blog/`, no dependen más del WordPress real, ver changelog sesión 8). **El usuario ya revisó y aprobó el texto de la Política de Privacidad** (ver changelog sesión 9) — sigue sin ser asesoramiento legal formal, pero ya no es un borrador pendiente de aprobación. **EL SITIO YA ESTÁ EN VIVO en https://nestorhoracio.com** (sesión 11, 2026-08-19) — el deploy se completó y quedó verificado: home, blog, portfolio, 404, formulario de contacto, HTTPS forzado, redirect sin `www`, trailing slash y todos los headers de seguridad del `.htaccess` (CSP, HSTS, X-Frame-Options, Permissions-Policy) confirmados contra el hosting real con `curl -I`. WordPress fue movido fuera de `public_html/` (backup completo hecho antes, ver changelog sesión 11) — la cuenta HostGator ahora sirve el sitio Astro. Repo en GitHub (`nestorhoracio/nestorhoracio-astro`, público, rama `main`) y workflow de GitHub Actions (`.github/workflows/deploy.yml`, build + FTPS) funcionando: cada push a `main` redeploya solo. Ya se verificó también contra producción real: **PageSpeed Insights dio Rendimiento 100, SEO 100, Prácticas recomendadas 100 y Accesibilidad 93** — y los 3 hallazgos reales de accesibilidad (links de las cards de portfolio/blog sin nombre accesible, `<h4>` saltando el `<h3>`, logo de 500×500 servido a 44×44) ya se arreglaron y deployaron (ver changelog). Falta re-confirmar el puntaje nuevo — PageSpeed devolvió un reporte viejo cacheado la primera vez que se probó después del fix; el usuario decidió esperar unos días antes de volver a correrlo. **El formulario de contacto ya entrega mail en producción** (2026-08-22, sesión 12 — migrado de `mail()` a la API de Resend, ver changelog). Lo único que queda es el borrado definitivo de WordPress (pasos 7-9 en "Próximo" abajo), pospuesto a propósito.
+El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado, SEO, seguridad, accesibilidad, deploy real a HostGator) vive completo en el changelog, sesiones 1 a 11 abajo — no se repite acá para no duplicar (ver "Higiene de la documentación").
 
 ## Decisiones tomadas
 
@@ -58,6 +51,14 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-09-08 (sesión 14) — Botón "Calificame en Google" en el footer
+El usuario pidió agregar un botón de reseñas de Google Business en el footer, con el short link real (`https://g.page/r/CTAU1Frf2jTHEAI/review`).
+- **`Footer.astro`**: nuevo `<a class="btn">` "Calificame en Google" entre los íconos sociales y los links de Blog/Política de Privacidad, `target="_blank"` + `rel="noopener"` igual que el resto de links externos del footer.
+- **`footer.css`**: como el link vive dentro de un `<p>`, la regla genérica `.nh-footer a` (que baja `font-size`/`color`/`opacity` para los links normales) le ganaba en especificidad a `.btn` y lo aplastaba — se agregó `.nh-footer__review a.btn` (mayor especificidad) para que el botón mantenga el estilo `.btn` real (fondo teal, texto blanco, mayúsculas).
+- **`Layout.astro`**: agregado un tercer caso al listener delegado de clics (mismo patrón que `whatsapp_click`/`social_click`) — cualquier link cuyo href incluya `g.page` dispara `google_review_click` con `link_url`/`page_path`, para poder medir cuánta gente hace clic en el pedido de reseña. No se pidió explícitamente, pero se agregó por ser una extensión de una línea sobre un patrón ya existente y aprobado.
+- Verificado con `npm run build` (19 páginas, sin errores) y con un script de Playwright contra `astro preview`: capturas del footer en desktop y mobile (el botón se ve bien, sin pisar el toggle de dark mode ni el resto del layout) y confirmado que el clic dispara `google_review_click` con los parámetros esperados, sin errores de consola. Como el footer usa colores fijos (`--footer-bg`/`--footer-texto` no cambian en `body.dark-mode`), no hizo falta probar el botón por separado en modo oscuro.
+- **Nota de higiene de documentación**: la sección "Estado anterior (2026-08-27)" (el resumen largo de la etapa "sitio construido") se sacó de este archivo — estaba duplicada con el changelog de las sesiones 6 a 11 de abajo, y el ROADMAP ya venía superando el largo sugerido en "Higiene de la documentación".
 
 ### 2026-09-03 (sesión 13) — Google Analytics 4 + tracking de WhatsApp y redes sociales
 El usuario pidió rastrear clics de WhatsApp en todo el sitio y, de ser posible, tráfico entrante/saliente de redes sociales. Tenía la propiedad de GA4 ya creada (`NH_Digital_Space`, ID `G-78H35GJS30`) pero **el sitio nunca había tenido el tag instalado** (confirmado: no había ningún `gtag`/`googletagmanager` en `src/`, coincide con el panel de GA4 mostrando cero datos).

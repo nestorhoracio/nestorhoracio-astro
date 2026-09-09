@@ -93,6 +93,14 @@ const jsonLdList = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
             link_url: href,
             page_path: window.location.pathname,
           });
+          return;
+        }
+
+        if (href.includes("g.page")) {
+          window.gtag("event", "google_review_click", {
+            link_url: href,
+            page_path: window.location.pathname,
+          });
         }
       });
     </script>
