@@ -1,6 +1,10 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-09-09)
+## Estado actual (2026-11-22)
+
+**Digital Key agregado como 7.º proyecto del portfolio** (sesión 16, ver changelog). Contador del hero en "7 proyectos reales".
+
+## Estado anterior (2026-09-09)
 
 **SEO del home ampliado de ciudad a país** (sesión 15, ver changelog): el copy dejó de anclarse a "Paso de los Toros" y ahora apunta a "diseñador web freelance en Uruguay". Pendiente de push al momento de escribir esto — una vez pusheado, el usuario manda a reindexar en Search Console.
 
@@ -51,6 +55,13 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-11-22 (sesión 16) — Digital Key como 7.º proyecto del portfolio
+- **`src/content/portfolio/digital-key.md`** (`order: 7`) + portada `digital-key.jpg` (184 KB, el build la pasa a WebP). Sitio WordPress con tema propio (dkey-theme), Hotmart, MailerLite, Brevo y Rank Math. Contenido solo con datos verificados en el AVANCES del proyecto; sin montos, accesos, nombre completo ni dirección del cliente.
+- **PageSpeed móvil (22/11/2026, medido por el usuario):** Rendimiento 99, Accesibilidad 100, Prácticas recomendadas 100, SEO 100 — publicado en el bloque "SEO y velocidad".
+- **`index.astro`:** hero de "6" a "7 proyectos reales". "2 stacks" y "100% código a medida" se dejaron igual por decisión del usuario (Digital Key cuenta como WordPress; el tema es propio).
+- **Privacidad:** el cliente pidió un sitio sin patrocinio — no se agregó ningún crédito ni enlace a nestorhoracio.com en digitalkey.academy, y ese sitio no se tocó.
+- `npm run build`: 20 páginas, sin errores. Verificado en `dist/`: JSON-LD `CreativeWork`, `og:image`, entrada en el sitemap, card con `<h3>`.
 
 ### 2026-09-09 (sesión 15) — SEO: de "Paso de los Toros" a "diseñador web freelance en Uruguay"
 El usuario quiere que lo encuentren en Google como "diseñador web freelancer en Uruguay", no acotado a la ciudad de Paso de los Toros (útil para captar clientes de todo el país, no solo locales). Cambiado el copy orientado a posicionamiento, sin tocar contenido factual de terceros:
