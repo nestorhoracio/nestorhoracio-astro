@@ -55,7 +55,7 @@ meses viejos en un párrafo y conservar completo el último trimestre.
 `nestorhoracio.com` tiene la REST API de WordPress abierta y sin bloqueos (a diferencia de jesuseselcamino.uy no hace falta User-Agent especial, aunque el script lo manda igual por las dudas). Relevado el 2026-08-17:
 
 - **Blog**: 8 posts reales (la categoría "Uncategorized" con count 0 no aporta nada; los conteos de 6+3 que muestra `/wp-json/wp/v2/categories` no coinciden 1:1 con `/wp-json/wp/v2/posts` porque un post puede tener dos categorías — confirmar si hace falta exactitud). Categorías reales: **diseño web** (slug `diseno-web`) e **IA y Desarrollo web** (slug `ia-y-desarrollo-web`).
-- **Páginas** (`/wp-json/wp/v2/pages`): Inicio, Portfolio (hub, no se usa — ver "Arquitectura real" abajo), 5 páginas de proyecto (Barraca Hefesto, 252 Plaza, Santa Isabel FM, Mimosos, Jesús es el Camino), Servicios, Sobre Mí (estas dos últimas resultaron ser anclas del home, no páginas reales — ver abajo), Blog (hub), Política de Privacidad. Ya migradas todas las que correspondía migrar.
+- **Páginas** (`/wp-json/wp/v2/pages`): Inicio, Portfolio (hub, no se usa — ver "Arquitectura real" abajo), 5 páginas de proyecto en WP (Barraca Hefesto, 252 Plaza, Santa Isabel FM, Mimosos, Jesús es el Camino), Servicios, Sobre Mí (estas dos últimas resultaron ser anclas del home, no páginas reales — ver abajo), Blog (hub), Política de Privacidad. Ya migradas todas las que correspondía migrar.
 
 ## Gotchas / hallazgos técnicos
 
@@ -74,7 +74,7 @@ meses viejos en un párrafo y conservar completo el último trimestre.
 
 **Home (`/`) es un one-pager real**, no hay páginas separadas para Portfolio/Servicios/Sobre Mí:
 - Hero: "Néstor Horacio Díaz" + tagline + párrafo.
-- `#portfolio` ("Mi trabajo"): grid de cards (screenshot + título + bajada corta), cada una linkeando a su página de detalle (`/barraca-hefesto/`, `/252-plaza/`, `/santa-isabel-fm/`, `/mimosos/`, `/jesus-es-el-camino/`, `/atalaias-rou/` — permalinks planos, sin prefijo). **Atalaias Rou no está en el sitio WP original** — se agregó a pedido del usuario (sesión 3, ver ROADMAP.md), es un proyecto real en `f:/proyecto astro abril 2026/atalaias-rou` con deploy temporal en Netlify. El resto de la collection `portfolio` sí viene 1:1 del sitio real.
+- `#portfolio` ("Mi trabajo"): grid de cards (screenshot + título + bajada corta), cada una linkeando a su página de detalle (`/barraca-hefesto/`, `/mimosos/`, `/jesus-es-el-camino/`, `/atalaias-rou/`, `/digital-key/` — permalinks planos, sin prefijo). **252 Plaza y Santa Isabel FM se sacaron del portfolio el 2026-11-22** (proyectos no aprobados, decisión del usuario) — existían en el WP original pero no se vuelven a agregar. **Atalaias Rou no está en el sitio WP original** — se agregó a pedido del usuario (sesión 3, ver ROADMAP.md), es un proyecto real en `f:/proyecto astro abril 2026/atalaias-rou` con deploy temporal en Netlify. El resto de la collection `portfolio` sí viene 1:1 del sitio real.
 - `#diseno-web` ("Lo que puedo hacer por tu negocio" — el link de nav dice "Servicios" pero el copy real dice otra cosa): 4 bloques de servicio + "¿Por qué trabajar conmigo?".
 - `#sobre-mi` ("Sobre MI"): bio + 3 subsecciones.
 - Footer: social follow (Facebook/Instagram/WhatsApp), link a Blog, copyright.

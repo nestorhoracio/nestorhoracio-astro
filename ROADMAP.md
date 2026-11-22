@@ -2,7 +2,11 @@
 
 ## Estado actual (2026-11-22)
 
-**Digital Key agregado como 7.º proyecto del portfolio** (sesión 16, ver changelog). Contador del hero en "7 proyectos reales".
+**Portfolio con 5 proyectos**: Barraca Hefesto, Mimosos, Jesús es el Camino, Atalaias Rou y Digital Key. 252 Plaza y Santa Isabel FM se sacaron (sesión 17) y el hero dice "5 proyectos reales". Detalle en el changelog.
+
+## Estado anterior (2026-11-22, sesión 16)
+
+Digital Key agregado como 7.º proyecto del portfolio.
 
 ## Estado anterior (2026-09-09)
 
@@ -55,6 +59,14 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-11-22 (sesión 17) — Se sacan 252 Plaza y Santa Isabel FM del portfolio
+Decisión del usuario: no fueron aprobados por los clientes, y hoy hay más proyectos reales al 100%.
+- **Borrados** `252-plaza.{md,jpg}` y `santa-isabel-fm.{md,jpg}` de `src/content/portfolio/` — desaparecen solas del home, de `/252-plaza/` y `/santa-isabel-fm/` y del sitemap.
+- **`index.astro`:** hero de "7" a "5 proyectos reales".
+- **Blog:** `astro-sitios-cargan-menos-2-segundos` ahora cita solo Barraca Hefesto y Mimosos; `inteligencia-artificial-en-sitios-web` perdió la frase del asistente de 252 Plaza.
+- **CLAUDE.md:** actualizado el listado de cards del home y anotada la baja.
+- **Pendiente a decidir:** las dos URLs viejas ya pueden estar indexadas y ahora darán 404. Si se quiere, agregar redirect 301 al home (o 410) en `public/.htaccess` — no se hizo porque es decisión del usuario.
 
 ### 2026-11-22 (sesión 16) — Digital Key como 7.º proyecto del portfolio
 - **`src/content/portfolio/digital-key.md`** (`order: 7`) + portada `digital-key.jpg` (184 KB, el build la pasa a WebP). Sitio WordPress con tema propio (dkey-theme), Hotmart, MailerLite, Brevo y Rank Math. Contenido solo con datos verificados en el AVANCES del proyecto; sin montos, accesos, nombre completo ni dirección del cliente.

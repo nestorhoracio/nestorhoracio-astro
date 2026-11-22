@@ -18,7 +18,7 @@ cover: "./astro-sitios-cargan-menos-2-segundos.png"
 
 <h2>¿Qué tipo de negocios se benefician más?</h2>
 
-<p>Astro es ideal para sitios web de negocios locales, portfolios profesionales, restaurantes, comercios, radios, tiendas de ropa y cualquier negocio que necesite presencia digital rápida y profesional sin pagar una fortuna en hosting. Todos los sitios que desarrollo para mis clientes — Barraca Hefesto, 252 Plaza, Santa Isabel FM y Mimosos — están construidos con Astro y funcionan en Netlify de forma gratuita.</p>
+<p>Astro es ideal para sitios web de negocios locales, portfolios profesionales, restaurantes, comercios, radios, tiendas de ropa y cualquier negocio que necesite presencia digital rápida y profesional sin pagar una fortuna en hosting. Todos los sitios que desarrollo para mis clientes — Barraca Hefesto y Mimosos — están construidos con Astro y funcionan en Netlify de forma gratuita.</p>
 
 <h2>Lo que esto significa para tu negocio</h2>
 

@@ -14,7 +14,7 @@ cover: "./inteligencia-artificial-en-sitios-web.png"
 
 <h2>Ejemplos reales en mis proyectos</h2>
 
-<p>En Barraca Hefesto el asistente ayuda a los clientes a calcular materiales y arma un mensaje de WhatsApp con el pedido listo. En Mimosos recibe el presupuesto del visitante y recomienda prendas del catálogo real de la tienda. En 252 Plaza cada local tiene su propio asistente que responde sobre el menú y las promociones del día.</p>
+<p>En Barraca Hefesto el asistente ayuda a los clientes a calcular materiales y arma un mensaje de WhatsApp con el pedido listo. En Mimosos recibe el presupuesto del visitante y recomienda prendas del catálogo real de la tienda.</p>
 
 <h2>¿Cuánto cuesta y quién lo paga?</h2>
 
