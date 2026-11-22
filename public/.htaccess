@@ -15,6 +15,10 @@ ErrorDocument 404 /404.html
   RewriteCond %{HTTP_HOST} ^www\.nestorhoracio\.com [NC]
   RewriteRule ^ https://nestorhoracio.com%{REQUEST_URI} [L,R=301]
 
+  # Proyectos sacados del portfolio (2026-11-22): 301 a la sección de portfolio del home
+  # (NE evita que Apache escape el "#" del fragmento)
+  RewriteRule ^(252-plaza|santa-isabel-fm)/?$ https://nestorhoracio.com/#portfolio [L,R=301,NE]
+
   # Barra final siempre (permalinks de Astro terminan en "/", trailingSlash: 'always')
   # No aplica a archivos reales (con extensión) ni a la raíz.
   RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]+|/)$

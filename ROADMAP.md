@@ -2,7 +2,7 @@
 
 ## Estado actual (2026-11-22)
 
-**Portfolio con 5 proyectos**: Barraca Hefesto, Mimosos, Jesús es el Camino, Atalaias Rou y Digital Key. 252 Plaza y Santa Isabel FM se sacaron (sesión 17) y el hero dice "5 proyectos reales". Detalle en el changelog.
+**Portfolio con 5 proyectos**: Barraca Hefesto, Mimosos, Jesús es el Camino, Atalaias Rou y Digital Key. 252 Plaza y Santa Isabel FM se sacaron (sesión 17) y el hero dice "5 proyectos reales". Sus URLs viejas redirigen (301) a `/#portfolio`. Detalle en el changelog.
 
 ## Estado anterior (2026-11-22, sesión 16)
 
@@ -66,7 +66,7 @@ Decisión del usuario: no fueron aprobados por los clientes, y hoy hay más proy
 - **`index.astro`:** hero de "7" a "5 proyectos reales".
 - **Blog:** `astro-sitios-cargan-menos-2-segundos` ahora cita solo Barraca Hefesto y Mimosos; `inteligencia-artificial-en-sitios-web` perdió la frase del asistente de 252 Plaza.
 - **CLAUDE.md:** actualizado el listado de cards del home y anotada la baja.
-- **Pendiente a decidir:** las dos URLs viejas ya pueden estar indexadas y ahora darán 404. Si se quiere, agregar redirect 301 al home (o 410) en `public/.htaccess` — no se hizo porque es decisión del usuario.
+- **Redirect 301** (a pedido del usuario): `/252-plaza/` y `/santa-isabel-fm/` redirigen a `https://nestorhoracio.com/#portfolio` desde `public/.htaccess` (regla antes del slash final, flag `NE` para no escapar el `#`). El `.htaccess` no se puede probar con `astro preview`: falta confirmar contra producción con `curl -I https://nestorhoracio.com/252-plaza/` (esperado: `301` con `Location: .../#portfolio`).
 
 ### 2026-11-22 (sesión 16) — Digital Key como 7.º proyecto del portfolio
 - **`src/content/portfolio/digital-key.md`** (`order: 7`) + portada `digital-key.jpg` (184 KB, el build la pasa a WebP). Sitio WordPress con tema propio (dkey-theme), Hotmart, MailerLite, Brevo y Rank Math. Contenido solo con datos verificados en el AVANCES del proyecto; sin montos, accesos, nombre completo ni dirección del cliente.
