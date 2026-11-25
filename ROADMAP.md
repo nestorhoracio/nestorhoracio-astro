@@ -1,6 +1,10 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-11-22)
+## Estado actual (2026-11-25)
+
+**Política de Privacidad corregida** (sesión 18): ahora declara Google Analytics 4, Resend y la cookie técnica del formulario. Sin banner de consentimiento todavía — el usuario evalúa opciones para tráfico UE (ver changelog). Pendiente de commit/push.
+
+## Estado anterior (2026-11-22, sesión 17)
 
 **Portfolio con 5 proyectos**: Barraca Hefesto, Mimosos, Jesús es el Camino, Atalaias Rou y Digital Key. 252 Plaza y Santa Isabel FM se sacaron (sesión 17) y el hero dice "5 proyectos reales". Sus URLs viejas redirigen (301) a `/#portfolio`. Detalle en el changelog.
 
@@ -59,6 +63,14 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-11-25 (sesión 18) — Política de Privacidad: se declara la analítica
+La política (aprobada el 2026-08-18) decía "sin analítica ni cookies de seguimiento", pero GA4 está cargado desde la sesión 13.
+- **`politica-de-privacidad/index.astro`:** fecha a 25/11/2026; nuevo ítem "Analítica" (GA4, cookies, sin publicidad); "Con quién comparto" ahora nombra a Google y a Resend; se quitaron las negaciones de analítica/cookies/terceros; se conserva formulario, `localStorage` y Ley 18.331.
+- **Corrección de hecho (no estaba en el pedido):** el formulario no llega "solo por HostGator" — `contact.php` usa la API de Resend desde la sesión 12; además setea la cookie técnica `nh_last_submit`. Ambas quedaron declaradas.
+- **Verificado en el repo:** sin Google Ads/remarketing/consent mode; el CSP solo permite googletagmanager y google-analytics. `form_start`/`form_submit` son de la medición mejorada de GA4, no del código.
+- **Sin banner de consentimiento** (decisión del usuario). Opciones evaluadas para UE: bloquear GA4 hasta aceptar, Consent Mode v2 con `region` limitada a UE, o analítica sin cookies. Revisar si el tráfico UE en GA4 es relevante.
+- `npm run build`: 18 páginas, sin errores.
 
 ### 2026-11-22 (sesión 17) — Se sacan 252 Plaza y Santa Isabel FM del portfolio
 Decisión del usuario: no fueron aprobados por los clientes, y hoy hay más proyectos reales al 100%.
