@@ -2,11 +2,7 @@
 
 ## Estado actual (2026-11-25)
 
-**Consentimiento de analítica implementado, sin commitear** (sesión 19): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza (el usuario va a prospectar agencias de España). Pendiente de OK, commit, push y verificación en GA4 Tiempo real tras el deploy. Detalle en el changelog.
-
-## Estado anterior (2026-11-25, sesión 18)
-
-**Política de Privacidad corregida** (sesión 18, ya en producción): declara Google Analytics 4, Resend y la cookie técnica del formulario.
+**Consentimiento de analítica pusheado a `main`** (sesión 19, commits `ad16962` y `059d325`): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza (el usuario va a prospectar agencias de España), más el fix de `localStorage` en el dark mode del Header. La Política de Privacidad (sesión 18) ya declara GA4, Resend y la cookie técnica del formulario. **Falta verificar en producción tras el deploy** (ver "Pendiente activo #1" en Próximo). Detalle en el changelog.
 
 ## Estado anterior (2026-11-22, sesión 17)
 
@@ -49,6 +45,11 @@ El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado
 - **Dominio de envío: subdominio `send.nestorhoracio.com`, no `nestorhoracio.com` a secas** (2026-08-22, sesión 12): Resend recomienda fuerte no usar el dominio raíz, para no arriesgar el SPF/MX que ya usa el correo real del dominio.
 
 ## Próximo (en orden sugerido)
+
+**Pendiente activo #1 (sesión 19): verificar en producción el consentimiento de analítica.** Tres chequeos, todos después de que termine el deploy de GitHub Actions:
+1. `curl -I https://nestorhoracio.com/` (sin User-Agent ni cookie inventados) → el CSP tiene que incluir `https://www.google.com/g/collect` en `connect-src`. Si sigue la versión vieja, es la caché de nginx: `curl -X PURGE` a las URLs tocadas.
+2. GA4 → Tiempo real / DebugView, con una visita desde Uruguay: tienen que llegar visitas y eventos (`whatsapp_click`, etc.). **Es lo único que no se pudo probar en local** (los hits a Google se interceptaron para no ensuciar la propiedad). Si no llegan, alternativa: no declarar `ad_*` en `denied` fuera de la zona con consentimiento.
+3. Con la zona horaria del navegador en `Europe/Madrid` (devtools → Sensors): tiene que aparecer el banner y no cargarse `gtag.js` hasta aceptar; "Preferencias de cookies" visible en el footer.
 
 **El frente del mail del formulario está cerrado.** Resumen del 2026-08-22 (sesión 12):
 - Formulario de contacto migrado de `mail()` nativo a la API de Resend — confirmado funcionando en producción real (mensaje de prueba desde `/contacto/` llegó a la bandeja de entrada de `nesthora@gmail.com`, no a spam).
