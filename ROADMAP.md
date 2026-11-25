@@ -2,7 +2,11 @@
 
 ## Estado actual (2026-11-25)
 
-**Política de Privacidad corregida** (sesión 18): ahora declara Google Analytics 4, Resend y la cookie técnica del formulario. Sin banner de consentimiento todavía — el usuario evalúa opciones para tráfico UE (ver changelog). Pendiente de commit/push.
+**Consentimiento de analítica implementado, sin commitear** (sesión 19): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza (el usuario va a prospectar agencias de España). Pendiente de OK, commit, push y verificación en GA4 Tiempo real tras el deploy. Detalle en el changelog.
+
+## Estado anterior (2026-11-25, sesión 18)
+
+**Política de Privacidad corregida** (sesión 18, ya en producción): declara Google Analytics 4, Resend y la cookie técnica del formulario.
 
 ## Estado anterior (2026-11-22, sesión 17)
 
@@ -63,6 +67,16 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-11-25 (sesión 19) — Consentimiento de analítica (Consent Mode v2 básico, solo zona con consentimiento)
+Motivo: el usuario va a prospectar agencias de España, así que GA4 con cookies no puede cargarse sin consentimiento previo para visitantes de la UE.
+- **Nuevo `src/lib/consent.ts`**: detecta la zona por la zona horaria del navegador (`Europe/*` + lista de zonas ultraperiféricas/EEE/UK/Suiza; ilegible = zona con consentimiento), guarda la elección en `localStorage` (`nhConsent`, 12 meses, todo con `try/catch`), carga `gtag.js` solo si corresponde y revoca borrando `_ga` y `_ga_78H35GJS30` (incl. `.nestorhoracio.com`). El listener de clics evalúa el consentimiento en cada evento.
+- **Nuevos** `ConsentBanner.astro` + `consent.css` (Aceptar/Rechazar con el mismo peso); **`Footer.astro`/`footer.css`**: botón "Preferencias de cookies" (solo zona con consentimiento); **`Layout.astro`**: se saca el loader `is:inline` de `gtag.js` y queda un único `<script>` externo.
+- **CSP (`public/.htaccess`): se agregó `https://www.google.com/g/collect` a `connect-src`.** Hallazgo de las pruebas: con `ad_storage` en `denied` GA4 manda hits a ese endpoint y la CSP anterior los bloqueaba (habría perdido datos en silencio). Es un cambio respecto de lo que se había planteado ("CSP sin cambios").
+- **Política de Privacidad**: nombra la zona completa (UE, EEE, Reino Unido y Suiza), cómo se detecta, las cookies `_ga`/`_ga_78H35GJS30` (hasta 2 años), la elección en `localStorage` por 12 meses y cómo cambiarla.
+- **Pruebas** (Playwright/Chromium contra `dist/` servido con la CSP real; ver CLAUDE.md → Analytics): 62/62 OK — 24 zonas horarias, flujo completo en `Europe/Madrid`, `Africa/Ceuta`, `Atlantic/Canary`, `Asia/Nicosia`, caducidad, datos corruptos, `localStorage` bloqueado, zona ilegible y comportamiento fuera de la zona.
+- **Pendiente tras el deploy:** confirmar en GA4 (Tiempo real / DebugView) que llegan los hits desde un visitante de Uruguay y que `curl -I` muestra la CSP nueva (`PURGE` de las URLs si hace falta). Si no llegaran, la alternativa es no declarar `ad_*` en `denied` fuera de la zona.
+- **Pendiente aparte:** `Header.astro` usa `localStorage` sin `try/catch` (dark mode) — falla con `localStorage` bloqueado; previo a este cambio.
 
 ### 2026-11-25 (sesión 18) — Política de Privacidad: se declara la analítica
 La política (aprobada el 2026-08-18) decía "sin analítica ni cookies de seguimiento", pero GA4 está cargado desde la sesión 13.

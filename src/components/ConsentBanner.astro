@@ -1,0 +1,23 @@
+---
+import "../styles/consent.css";
+---
+
+<!-- Banner de consentimiento de analítica. Oculto por defecto: lo muestra
+     src/lib/consent.ts solo en zona con consentimiento (UE/EEE/UK/Suiza). -->
+<div
+  id="nh-consent"
+  class="nh-consent"
+  role="dialog"
+  aria-labelledby="nh-consent-title"
+  aria-describedby="nh-consent-text"
+  hidden
+>
+  <p id="nh-consent-title" class="nh-consent__title">Cookies de analítica</p>
+  <p id="nh-consent-text" class="nh-consent__text">
+    Uso Google Analytics para saber cuántas visitas recibe el sitio. No se activa hasta que lo aceptes, y podés cambiar tu elección cuando quieras desde "Preferencias de cookies", al pie de la página. Más información en la <a href="/politica-de-privacidad/">Política de Privacidad</a>.
+  </p>
+  <div class="nh-consent__actions">
+    <button type="button" class="nh-consent__btn" data-consent-choice="denied">Rechazar</button>
+    <button type="button" class="nh-consent__btn" data-consent-choice="granted">Aceptar</button>
+  </div>
+</div>

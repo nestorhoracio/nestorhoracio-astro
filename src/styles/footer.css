@@ -42,6 +42,24 @@
   opacity: 1;
 }
 
+/* "Preferencias de cookies": botón con aspecto de link (solo zona con consentimiento) */
+.nh-footer__prefs {
+  padding: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--footer-texto);
+  background: none;
+  border: 0;
+  opacity: 0.85;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.nh-footer__prefs:hover {
+  opacity: 1;
+}
+
 .nh-footer__review {
   margin-bottom: 1.2rem;
 }
