@@ -75,10 +75,18 @@ const links = [
       logoImage.src = enable ? darkLogoSrc : lightLogoSrc;
     }
     document.body.classList.toggle("dark-mode", enable);
-    localStorage.setItem("darkMode", enable ? "enabled" : "disabled");
+    // localStorage puede estar bloqueado (modo privado estricto, políticas del
+    // navegador): sin try/catch un SecurityError cortaba el resto del script
+    // (scroll-spy incluido). Si falla, la preferencia vale solo para esa página.
+    try {
+      localStorage.setItem("darkMode", enable ? "enabled" : "disabled");
+    } catch {}
   };
 
-  const userPreference = localStorage.getItem("darkMode");
+  let userPreference: string | null = null;
+  try {
+    userPreference = localStorage.getItem("darkMode");
+  } catch {}
   if (userPreference === "enabled") {
     applyDarkMode(true);
   } else if (userPreference === "disabled") {

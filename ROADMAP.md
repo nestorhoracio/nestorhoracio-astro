@@ -76,7 +76,7 @@ Motivo: el usuario va a prospectar agencias de España, así que GA4 con cookies
 - **Política de Privacidad**: nombra la zona completa (UE, EEE, Reino Unido y Suiza), cómo se detecta, las cookies `_ga`/`_ga_78H35GJS30` (hasta 2 años), la elección en `localStorage` por 12 meses y cómo cambiarla.
 - **Pruebas** (Playwright/Chromium contra `dist/` servido con la CSP real; ver CLAUDE.md → Analytics): 62/62 OK — 24 zonas horarias, flujo completo en `Europe/Madrid`, `Africa/Ceuta`, `Atlantic/Canary`, `Asia/Nicosia`, caducidad, datos corruptos, `localStorage` bloqueado, zona ilegible y comportamiento fuera de la zona.
 - **Pendiente tras el deploy:** confirmar en GA4 (Tiempo real / DebugView) que llegan los hits desde un visitante de Uruguay y que `curl -I` muestra la CSP nueva (`PURGE` de las URLs si hace falta). Si no llegaran, la alternativa es no declarar `ad_*` en `denied` fuera de la zona.
-- **Pendiente aparte:** `Header.astro` usa `localStorage` sin `try/catch` (dark mode) — falla con `localStorage` bloqueado; previo a este cambio.
+- **Corregido aparte (mismo día):** `Header.astro` usaba `localStorage` sin `try/catch` (dark mode): con `localStorage` bloqueado lanzaba `SecurityError` y el toggle no alternaba. Ahora lee y escribe con `try/catch` (si falla, la preferencia vale solo para esa página). Probado con Playwright antes (falla) y después (pasa), y el flujo normal (alternar, persistir, logo oscuro) sigue igual.
 
 ### 2026-11-25 (sesión 18) — Política de Privacidad: se declara la analítica
 La política (aprobada el 2026-08-18) decía "sin analítica ni cookies de seguimiento", pero GA4 está cargado desde la sesión 13.
