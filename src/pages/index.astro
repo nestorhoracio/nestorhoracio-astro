@@ -10,7 +10,15 @@ const portfolio = (await getCollection("portfolio")).sort((a, b) => a.data.order
 const services = [
   {
     title: "Diseño y Desarrollo Web a Medida.",
-    text: "Construyo sitios web profesionales adaptados a las necesidades reales de tu negocio. Trabajo con WordPress FSE, Astro y Divi según lo que cada proyecto requiera — sin plantillas genéricas, sin soluciones de copia y pega.",
+    text: "Construyo sitios web profesionales adaptados a las necesidades reales de tu negocio. Trabajo con WordPress FSE, Astro y Divi según lo que cada proyecto requiera — sin soluciones de copia y pega.",
+  },
+  {
+    title: "Tiendas online con WooCommerce",
+    text: "Armo tu tienda para vender por internet, con un panel para que cargues productos y precios y sigas los pedidos. Acordamos alcance, plazo y precio antes de empezar.",
+    cta: {
+      label: "Consultame por WhatsApp",
+      href: "https://wa.me/59898472684?text=Hola%20N%C3%A9stor%2C%20quiero%20consultarte%20por%20una%20tienda%20online.",
+    },
   },
   {
     title: "Integraciones con Inteligencia Artificial",
@@ -37,22 +45,22 @@ const about = [
   },
   {
     title: "Lo que me diferencia",
-    text: "No trabajo con plantillas. Cada proyecto arranca desde cero pensando en el cliente, su negocio y sus objetivos. Me encargo de todo el proceso — diseño, desarrollo, deploy, seguridad, SEO y mantenimiento — para que vos solo te preocupes por tu negocio.",
+    text: "No trabajo con recetas. Cada proyecto arranca pensando en el cliente, su negocio y sus objetivos. Me encargo de todo el proceso — diseño, desarrollo, deploy, seguridad, SEO y mantenimiento — para que vos solo te preocupes por tu negocio.",
   },
 ];
 ---
 
 <Layout
-  title="Néstor Horacio Díaz — Diseñador Web Freelance en Uruguay"
-  description="Diseñador y desarrollador web freelance en Uruguay. Sitios a medida con WordPress y Astro para negocios que quieren crecer, en todo el país y Latinoamérica."
+  title="Diseñador Web Freelance en Uruguay y Tiendas Online | NH"
+  description="Diseñador web freelance en Uruguay. Sitios a medida con WordPress y Astro, y tiendas online con WooCommerce. Todo el país y Latinoamérica."
   jsonLd={websiteSchema()}
 >
   <main>
     <section class="section hero">
       <div class="section__inner">
         <h1>Néstor Horacio Díaz</h1>
-        <h2>Sitios web hechos para tu negocio, no para todos los negocios.</h2>
-        <p>Diseñador y desarrollador web freelance en Uruguay. Sitios a medida con WordPress y Astro para negocios que quieren crecer, en todo el país y Latinoamérica.</p>
+        <h2>Sitios web y tiendas online hechos para tu negocio, no para todos los negocios.</h2>
+        <p>Diseñador y desarrollador web freelance en Uruguay. Sitios a medida con WordPress y Astro, y tiendas online con WooCommerce, para negocios que quieren crecer, en todo el país y Latinoamérica.</p>
         <div class="hero__cta">
           <a class="btn" href="https://wa.me/59898472684?text=Hola%20N%C3%A9stor%2C%20vi%20tu%20sitio%20y%20quiero%20contarte%20sobre%20mi%20proyecto." target="_blank" rel="noopener">Hablemos por WhatsApp</a>
           <a class="btn btn--outline" href="#portfolio">Ver mi trabajo</a>
@@ -60,7 +68,6 @@ const about = [
         <div class="hero__stats">
           <div><strong>5</strong><span>proyectos reales</span></div>
           <div><strong>2</strong><span>stacks: WordPress FSE y Astro</span></div>
-          <div><strong>100%</strong><span>código a medida, sin plantillas</span></div>
         </div>
       </div>
     </section>
@@ -93,6 +100,9 @@ const about = [
             <div class="service-item">
               <h3>{service.title}</h3>
               <p>{service.text}</p>
+              {service.cta && (
+                <a class="service-item__cta" href={service.cta.href} target="_blank" rel="noopener">{service.cta.label}</a>
+              )}
             </div>
           ))}
         </div>
@@ -107,7 +117,7 @@ const about = [
       <div class="section__inner">
         <h2>Sobre mí</h2>
         <div class="about-bio">
-          <p>Soy Néstor Horacio Díaz, diseñador y desarrollador web freelance en Uruguay. Diseño y construyo sitios web que funcionan de verdad — rápidos, seguros y adaptados a las necesidades reales de cada negocio.</p>
+          <p>Soy Néstor Horacio Díaz, diseñador y desarrollador web freelance en Uruguay. Diseño y construyo sitios web que funcionan de verdad — rápidos, seguros y adaptados a las necesidades reales de cada negocio. También armo tiendas online.</p>
         </div>
         <div class="about-grid">
           {about.map((item) => (

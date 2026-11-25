@@ -1,8 +1,10 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-11-25)
+## Estado actual (2026-11-25, sesión 20)
 
-**Consentimiento de analítica pusheado a `main`** (sesión 19, commits `ad16962` y `059d325`): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza (el usuario va a prospectar agencias de España), más el fix de `localStorage` en el dark mode del Header. La Política de Privacidad (sesión 18) ya declara GA4, Resend y la cookie técnica del formulario. **Falta verificar en producción tras el deploy** (ver "Pendiente activo #1" en Próximo). Detalle en el changelog.
+**Servicio de tiendas online con WooCommerce agregado al home**, commit y push aprobados por el usuario (ver changelog). Tras el deploy: revisar el home en producción (`PURGE` si la caché muestra la versión vieja) y pedir reindexación en Search Console por el título nuevo. Las tres frases que podían no ser ciertas para una tienda ya se cambiaron por decisión del usuario.
+
+**El consentimiento de analítica ya está publicado** (sesión 19, commits `ad16962` y `059d325`): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza, más el fix de `localStorage` en el dark mode del Header. La Política de Privacidad (sesión 18) declara GA4, Resend y la cookie técnica del formulario. El CSP nuevo está confirmado en producción; quedan dos chequeos (ver "Pendiente activo #1").
 
 ## Estado anterior (2026-11-22, sesión 17)
 
@@ -46,8 +48,7 @@ El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado
 
 ## Próximo (en orden sugerido)
 
-**Pendiente activo #1 (sesión 19): verificar en producción el consentimiento de analítica.** Tres chequeos, todos después de que termine el deploy de GitHub Actions:
-1. `curl -I https://nestorhoracio.com/` (sin User-Agent ni cookie inventados) → el CSP tiene que incluir `https://www.google.com/g/collect` en `connect-src`. Si sigue la versión vieja, es la caché de nginx: `curl -X PURGE` a las URLs tocadas.
+**Pendiente activo #1 (sesión 19): terminar de verificar en producción el consentimiento de analítica** (ya publicado). El CSP está confirmado (`curl -I`, 2026-11-25: `connect-src` incluye `https://www.google.com/g/collect`). Quedan:
 2. GA4 → Tiempo real / DebugView, con una visita desde Uruguay: tienen que llegar visitas y eventos (`whatsapp_click`, etc.). **Es lo único que no se pudo probar en local** (los hits a Google se interceptaron para no ensuciar la propiedad). Si no llegan, alternativa: no declarar `ad_*` en `denied` fuera de la zona con consentimiento.
 3. Con la zona horaria del navegador en `Europe/Madrid` (devtools → Sensors): tiene que aparecer el banner y no cargarse `gtag.js` hasta aceptar; "Preferencias de cookies" visible en el footer.
 
@@ -68,6 +69,14 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-11-25 (sesión 20) — Servicio de tiendas online con WooCommerce
+- **`index.astro`:** quinto servicio (segundo en el orden) con enlace "Consultame por WhatsApp" y mensaje precargado (campo opcional `cta`). Tiendas mencionadas en el párrafo del hero, la meta description (ahora distinta del párrafo, más corta) y la bio de "Sobre mí". A pedido del usuario, los títulos también las mencionan: `<title>` pasa a "Diseñador Web Freelance en Uruguay y Tiendas Online | NH" (conserva entera la frase buscada de la sesión 15) y el h2 del hero a "Sitios web y tiendas online hechos para tu negocio, no para todos los negocios." La imagen OG (`og-default.png`) conserva el tagline anterior.
+- **`home.css`:** la grilla de servicios pasa a flex centrado: 3 + 2 (más de 980px), 2 + 2 + 1 (701 a 980px) y 1 columna.
+- **Frases ajustadas** (decisión del usuario, porque podían no ser ciertas para una tienda WooCommerce): se quitó la estadística "100% código a medida, sin plantillas" (quedan 2); "No trabajo con plantillas… desde cero" pasó a "No trabajo con recetas. Cada proyecto arranca pensando en el cliente…"; en el primer servicio se quitó "sin plantillas genéricas" (quedó "sin soluciones de copia y pega"). Reemplaza lo decidido en las sesiones 4 y 16 sobre esa estadística. Los textos de portfolio sobre proyectos puntuales no se tocaron.
+- Sin precios, clientes ni cifras nuevas. `tienda.nestorhoracio.com` es solo de prueba: no va al portfolio ni se enlaza.
+- **Pruebas** (Playwright contra `dist/` con la CSP de `.htaccess`, sin salida a la red): el enlace dispara `whatsapp_click` con el mensaje correcto en `America/Montevideo`; en `Europe/Madrid`, ningún evento antes de aceptar y uno después. Grilla medida a 1280, 850 y 375px en claro y oscuro, sin scroll horizontal.
+- **Hallazgo:** compilando en Windows desde `f:\` (minúscula) el build terminó sin errores pero sin CSS; desde `F:\` salió bien (ver CLAUDE.md → Gotchas).
 
 ### 2026-11-25 (sesión 19) — Consentimiento de analítica (Consent Mode v2 básico, solo zona con consentimiento)
 Motivo: el usuario va a prospectar agencias de España, así que GA4 con cookies no puede cargarse sin consentimiento previo para visitantes de la UE.
