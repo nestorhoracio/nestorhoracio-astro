@@ -4,7 +4,7 @@
 
 **Servicio de tiendas online con WooCommerce agregado al home**, commit y push aprobados por el usuario (ver changelog). Tras el deploy: revisar el home en producción (`PURGE` si la caché muestra la versión vieja) y pedir reindexación en Search Console por el título nuevo. Las tres frases que podían no ser ciertas para una tienda ya se cambiaron por decisión del usuario.
 
-**El consentimiento de analítica ya está publicado** (sesión 19, commits `ad16962` y `059d325`): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza, más el fix de `localStorage` en el dark mode del Header. La Política de Privacidad (sesión 18) declara GA4, Resend y la cookie técnica del formulario. El CSP nuevo está confirmado en producción; quedan dos chequeos (ver "Pendiente activo #1").
+**El consentimiento de analítica ya está publicado** (sesión 19, commits `ad16962` y `059d325`): Consent Mode v2 en modo básico con banner solo para UE/EEE/Reino Unido/Suiza, más el fix de `localStorage` en el dark mode del Header. La Política de Privacidad (sesión 18) declara GA4, Resend y la cookie técnica del formulario. La verificación en producción está cerrada: CSP confirmado con `curl -I`, y GA4 y banner comprobados según informó el usuario (con Claude AI).
 
 ## Estado anterior (2026-11-22, sesión 17)
 
@@ -48,9 +48,7 @@ El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado
 
 ## Próximo (en orden sugerido)
 
-**Pendiente activo #1 (sesión 19): terminar de verificar en producción el consentimiento de analítica** (ya publicado). El CSP está confirmado (`curl -I`, 2026-11-25: `connect-src` incluye `https://www.google.com/g/collect`). Quedan:
-2. GA4 → Tiempo real / DebugView, con una visita desde Uruguay: tienen que llegar visitas y eventos (`whatsapp_click`, etc.). **Es lo único que no se pudo probar en local** (los hits a Google se interceptaron para no ensuciar la propiedad). Si no llegan, alternativa: no declarar `ad_*` en `denied` fuera de la zona con consentimiento.
-3. Con la zona horaria del navegador en `Europe/Madrid` (devtools → Sensors): tiene que aparecer el banner y no cargarse `gtag.js` hasta aceptar; "Preferencias de cookies" visible en el footer.
+**El consentimiento de analítica (sesión 19) está cerrado** (2026-11-25). CSP confirmado en producción con `curl -I` (`connect-src` incluye `https://www.google.com/g/collect`). Los otros dos chequeos (llegada de datos a GA4 y comportamiento del banner) los dio por comprobados el usuario, que los verificó con Claude AI; no se repitieron desde Claude Code.
 
 **El frente del mail del formulario está cerrado.** Resumen del 2026-08-22 (sesión 12):
 - Formulario de contacto migrado de `mail()` nativo a la API de Resend — confirmado funcionando en producción real (mensaje de prueba desde `/contacto/` llegó a la bandeja de entrada de `nesthora@gmail.com`, no a spam).
