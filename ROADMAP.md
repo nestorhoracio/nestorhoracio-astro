@@ -1,6 +1,10 @@
 # ROADMAP.md — nestorhoracio-astro
 
-## Estado actual (2026-11-25, sesión 20)
+## Estado actual (2026-11-25, sesión 21)
+
+**La imagen OG (`og-default.png`) ya tiene el tagline con tiendas online** (ver changelog). Falta el push, el deploy y, después, el `PURGE` y la verificación en producción.
+
+## Estado anterior (2026-11-25, sesión 20)
 
 **Servicio de tiendas online con WooCommerce agregado al home**, commit y push aprobados por el usuario (ver changelog). Tras el deploy: revisar el home en producción (`PURGE` si la caché muestra la versión vieja) y pedir reindexación en Search Console por el título nuevo. Las tres frases que podían no ser ciertas para una tienda ya se cambiaron por decisión del usuario.
 
@@ -51,6 +55,7 @@ El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado
 **Pendiente activo #1: cerrar lo del servicio de tiendas online (sesión 20).** Sin constancia de que ya esté hecho:
 1. Revisar el home en producción, incluido el botón "Consultame por WhatsApp" de la tarjeta de tiendas (`PURGE` si la caché muestra la versión vieja).
 2. Pedir la reindexación en Search Console por el título nuevo (lo hace el usuario).
+3. Tras el deploy de la imagen OG nueva (sesión 21): `PURGE` de `/images/og/og-default.png` y comprobar que producción sirve el archivo nuevo.
 
 **El frente del mail del formulario está cerrado.** Resumen del 2026-08-22 (sesión 12):
 - Formulario de contacto migrado de `mail()` nativo a la API de Resend — confirmado funcionando en producción real (mensaje de prueba desde `/contacto/` llegó a la bandeja de entrada de `nesthora@gmail.com`, no a spam).
@@ -69,6 +74,9 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 9. Nota para ese momento: `scripts/fetch-wp-content.mjs`/`npm run fetch:wp` dejan de servir en cuanto WordPress se borra (usan la REST API en vivo) — no rompe nada porque los 8 posts ya están migrados a `.md`, pero conviene anotarlo como código histórico (o borrarlo) en ese momento, no antes.
 
 ## Changelog
+
+### 2026-11-25 (sesión 21) — Imagen OG con el tagline de tiendas online
+- **`public/images/og/og-default.png`** reemplazada por el usuario: el subtítulo pasa a "Sitios web y tiendas online hechos para tu negocio, no para todos los negocios." Sigue en 1200×630 y con el mismo nombre, así que no hubo cambios de código. Con esto deja de valer la nota de la sesión 20 sobre el tagline anterior.
 
 ### 2026-11-25 (sesión 20) — Servicio de tiendas online con WooCommerce
 - **`index.astro`:** quinto servicio (segundo en el orden) con enlace "Consultame por WhatsApp" y mensaje precargado (campo opcional `cta`). Tiendas mencionadas en el párrafo del hero, la meta description (ahora distinta del párrafo, más corta) y la bio de "Sobre mí". A pedido del usuario, los títulos también las mencionan: `<title>` pasa a "Diseñador Web Freelance en Uruguay y Tiendas Online | NH" (conserva entera la frase buscada de la sesión 15) y el h2 del hero a "Sitios web y tiendas online hechos para tu negocio, no para todos los negocios." La imagen OG (`og-default.png`) conserva el tagline anterior.
