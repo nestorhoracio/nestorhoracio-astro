@@ -48,7 +48,9 @@ El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado
 
 ## Próximo (en orden sugerido)
 
-**El consentimiento de analítica (sesión 19) está cerrado** (2026-11-25). CSP confirmado en producción con `curl -I` (`connect-src` incluye `https://www.google.com/g/collect`). Los otros dos chequeos (llegada de datos a GA4 y comportamiento del banner) los dio por comprobados el usuario, que los verificó con Claude AI; no se repitieron desde Claude Code.
+**Pendiente activo #1: cerrar lo del servicio de tiendas online (sesión 20).** Sin constancia de que ya esté hecho:
+1. Revisar el home en producción, incluido el botón "Consultame por WhatsApp" de la tarjeta de tiendas (`PURGE` si la caché muestra la versión vieja).
+2. Pedir la reindexación en Search Console por el título nuevo (lo hace el usuario).
 
 **El frente del mail del formulario está cerrado.** Resumen del 2026-08-22 (sesión 12):
 - Formulario de contacto migrado de `mail()` nativo a la API de Resend — confirmado funcionando en producción real (mensaje de prueba desde `/contacto/` llegó a la bandeja de entrada de `nesthora@gmail.com`, no a spam).
@@ -56,7 +58,7 @@ El detalle de la etapa "sitio construido y deployado" (scaffold, diseño portado
 
 Ver el changelog de la sesión 12 abajo para el detalle completo. No queda ningún pendiente activo en este frente.
 
-Hasta que el secret esté cargado y el código se pushee, `contact.php` en producción sigue con la versión vieja (`mail()` nativo, sigue sin entregar). **No activar Titan Mail** — sigue sin tener sentido, ya no se usa ni siquiera el Exim local del hosting.
+**No activar Titan Mail** — sigue sin tener sentido, ya no se usa ni siquiera el Exim local del hosting.
 
 **Pendiente activo #2: re-confirmar el puntaje de Accesibilidad en PageSpeed.** Los 3 hallazgos reales ya están arreglados y en producción (ver changelog sesión 11) — falta solo volver a correr PageSpeed Insights para confirmar que subió de 93. El usuario decidió esperar unos días antes de reintentar (la primera vez después del fix, PSI devolvió un reporte viejo cacheado).
 
@@ -72,6 +74,7 @@ El deploy en sí ya está hecho y verificado (sesión 11, ver changelog) — pas
 - **`index.astro`:** quinto servicio (segundo en el orden) con enlace "Consultame por WhatsApp" y mensaje precargado (campo opcional `cta`). Tiendas mencionadas en el párrafo del hero, la meta description (ahora distinta del párrafo, más corta) y la bio de "Sobre mí". A pedido del usuario, los títulos también las mencionan: `<title>` pasa a "Diseñador Web Freelance en Uruguay y Tiendas Online | NH" (conserva entera la frase buscada de la sesión 15) y el h2 del hero a "Sitios web y tiendas online hechos para tu negocio, no para todos los negocios." La imagen OG (`og-default.png`) conserva el tagline anterior.
 - **`home.css`:** la grilla de servicios pasa a flex centrado: 3 + 2 (más de 980px), 2 + 2 + 1 (701 a 980px) y 1 columna.
 - **Frases ajustadas** (decisión del usuario, porque podían no ser ciertas para una tienda WooCommerce): se quitó la estadística "100% código a medida, sin plantillas" (quedan 2); "No trabajo con plantillas… desde cero" pasó a "No trabajo con recetas. Cada proyecto arranca pensando en el cliente…"; en el primer servicio se quitó "sin plantillas genéricas" (quedó "sin soluciones de copia y pega"). Reemplaza lo decidido en las sesiones 4 y 16 sobre esa estadística. Los textos de portfolio sobre proyectos puntuales no se tocaron.
+- **Ajuste posterior** (pedido del usuario, commit `4178610`): el enlace "Consultame por WhatsApp" de la tarjeta de tiendas pasó a ser un botón con la clase `.btn` existente; se borró `.service-item__cta` de `home.css`. Build OK (18 páginas); no se revisó visualmente en el navegador.
 - Sin precios, clientes ni cifras nuevas. `tienda.nestorhoracio.com` es solo de prueba: no va al portfolio ni se enlaza.
 - **Pruebas** (Playwright contra `dist/` con la CSP de `.htaccess`, sin salida a la red): el enlace dispara `whatsapp_click` con el mensaje correcto en `America/Montevideo`; en `Europe/Madrid`, ningún evento antes de aceptar y uno después. Grilla medida a 1280, 850 y 375px en claro y oscuro, sin scroll horizontal.
 - **Hallazgo:** compilando en Windows desde `f:\` (minúscula) el build terminó sin errores pero sin CSS; desde `F:\` salió bien (ver CLAUDE.md → Gotchas).
